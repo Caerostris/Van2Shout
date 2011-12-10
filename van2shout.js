@@ -72,6 +72,7 @@ function UpdateShoutbox() {
 function setPostText() {
 	var rootpath2 = gdn.definition('Van2ShoutRootpath');
 	$("#postDIV").html('<form action="javascript:send();" name="shoutform"><input type="text" onKeyPress="checkLength();" name="shoutboxMessage" id="shoutboxMessage" value="" size="18px" maxlength="256"/> <input type="button" id="van2shoutsubmit" name="submit" onClick="javascript:send();" value="->" /></form>');
+	$("#shoutboxMessage").focus();
 }
 $(document).ready(function() {
 	setPostText();
