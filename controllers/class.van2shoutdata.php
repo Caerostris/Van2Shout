@@ -20,7 +20,7 @@ header('Content-Type: text/html; charset=ISO-8859-15');
 
 class Van2ShoutData extends Gdn_Module {
 
-	public function __connstruct(&$Sender = '') {
+	public function __connstruct($Sender = '') {
 		parent::__construct($Sender);
 	}
 
