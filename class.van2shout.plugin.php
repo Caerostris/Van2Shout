@@ -16,6 +16,7 @@
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
 define('VAN2SHOUT_ASSETTARGET', 'Panel');
+define('USE_FIREBASE', true);
 
 // Define the plugin:
 $PluginInfo['Van2Shout'] = array(
@@ -81,6 +82,12 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Session = GDN::Session();
 		if($Session->CheckPermission('Plugins.Van2Shout.View'))
 		{
+			//Include firebase script?
+			if(USE_FIREBASE)
+			{
+				$Sender->Head->AddString("\n<script src='https://cdn.firebase.com/v0/firebase.js'></script>");
+			}
+
 			//Display the delete icon?
 			if($Session->CheckPermission('Plugins.Van2Shout.Delete'))
 			{
