@@ -21,16 +21,16 @@ define('VAN2SHOUT_ASSETTARGET', 'Panel');
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
-	'Version' => '1.04',
+	'Version' => '1.1',
 	'Author' => "Caerostris",
 	'AuthorEmail' => 'caerostris@gmail.com',
 	'AuthorUrl' => 'http://caerostris.com',
-		'SettingsPermission' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
-		'RegisterPermissions' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
+	'SettingsPermission' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
+	'RegisterPermissions' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
 );
 
 class Van2ShoutPlugin extends Gdn_Plugin {
-	public function PluginController_Van2ShoutData_Create(&$Sender) {
+	public function PluginController_Van2ShoutData_Create($Sender) {
 		//Check if user is allowed to view
 		$Session = GDN::Session();
 			if(!$Session->CheckPermission('Plugins.Van2Shout.View')) {
@@ -76,8 +76,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render(dirname(__FILE__) . DS . 'views' . DS . 'settings.php');
 	}
 
-//	public function DiscussionsController_Render_Before(&$Sender) {
-	public function Base_Render_Before(&$Sender) {
+//	public function DiscussionsController_Render_Before($Sender) {
+	public function Base_Render_Before($Sender) {
 		$Session = GDN::Session();
 		if($Session->CheckPermission('Plugins.Van2Shout.View'))
 		{
@@ -93,7 +93,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		}
 	}
 
-	public function ProfileController_AfterAddSideMenu_Handler(&$Sender) {
+	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
 		$Session = GDN::Session();
 		$SideMenu = $Sender->EventArguments['SideMenu'];
 		$ViewingUserID = $Session->UserID;
@@ -104,7 +104,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		}
 	}
 
-	public function ProfileController_Van2Shout_Create(&$Sender) {
+	public function ProfileController_Van2Shout_Create($Sender) {
 
 		$Session = GDN::Session();
 		$UserModel = new UserModel();

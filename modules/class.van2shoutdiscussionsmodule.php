@@ -16,7 +16,7 @@
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
 class Van2ShoutDiscussionsModule extends Gdn_Module {
-	public function __construct(&$Sender = '') {
+	public function __construct($Sender = '') {
 		parent::__construct($Sender);
 	}
 
