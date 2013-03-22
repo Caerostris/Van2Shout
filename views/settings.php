@@ -33,7 +33,8 @@ echo $this->Form->Errors();
 	</thead>
 	<tbody>
 		<tr><td>Disable timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
-		<tr><td>Colour of the timestamp</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
+		<tr><td>Colour of the timestamp (Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
+		<tr><td>Update interval (Default: 5000)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
 	</tbody>
 </table>
 

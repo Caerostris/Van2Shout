@@ -21,7 +21,7 @@ define('VAN2SHOUT_ASSETTARGET', 'Panel');
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
-	'Version' => '1.03',
+	'Version' => '1.04',
 	'Author' => "Caerostris",
 	'AuthorEmail' => 'caerostris@gmail.com',
 	'AuthorUrl' => 'http://caerostris.com',
@@ -67,6 +67,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			$Schema['Plugins.Van2Shout.'.$role] = array('LabelCode' => $role, 'Control' => 'Input', 'Default' => C('Plugins.Van2Shout.'.$role, ''));
 			$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
 			$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
+			$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
 		}
 
 		$ConfigurationModule->Schema($Schema);

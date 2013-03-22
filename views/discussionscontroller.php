@@ -37,7 +37,7 @@ echo "<h4>Shoutbox</h4>\n";
 <script src="<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/js/moment.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 	jQuery(document).ready(function($) { UpdateShoutbox(); });
-	setInterval('UpdateShoutbox()', 5000);
+	setInterval('UpdateShoutbox()', <?php echo C('Plugin.Van2Shout.Interval', 5000); ?>);
 
 	function UpdateShoutbox()
 	{
