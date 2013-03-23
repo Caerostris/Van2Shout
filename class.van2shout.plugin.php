@@ -15,7 +15,14 @@
 //	 You should have received a copy of the GNU General Public License
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
-define('VAN2SHOUT_ASSETTARGET', 'Panel');
+if(C('Plugin.Van2Shout.ContentAsset', false))
+{
+	define('VAN2SHOUT_ASSETTARGET', 'Content');
+}
+else
+{
+	define('VAN2SHOUT_ASSETTARGET', 'Panel');
+}
 
 // Define the plugin:
 $PluginInfo['Van2Shout'] = array(
@@ -43,13 +50,12 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		include_once(dirname(__FILE__).DS.'controllers'.DS.'class.van2shoutdata.php');
 		$Van2ShoutData = new Van2ShoutData($Sender);
 		echo $Van2ShoutData->ToString();
-
 	}
 
 	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
-    	$Menu = $Sender->EventArguments['SideMenu'];
-    	$Menu->AddLink('Add-ons', T('Van2Shout'), 'settings/van2shout', 'Garden.Settings.Manage');
-    }
+		$Menu = $Sender->EventArguments['SideMenu'];
+		$Menu->AddLink('Add-ons', T('Van2Shout'), 'settings/van2shout', 'Garden.Settings.Manage');
+	}
 
 	public function SettingsController_Van2Shout_Create($Sender) {
 		$Sender->Permission('Garden.Plugins.Manage');
@@ -62,12 +68,14 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$RoleModel = new RoleModel();
 		$Roles = $RoleModel->Get();
 
+		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
+		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
+		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
+		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', false));
+
 		while($role = $Roles->Value('Name', NULL))
 		{
 			$Schema['Plugins.Van2Shout.'.$role] = array('LabelCode' => $role, 'Control' => 'Input', 'Default' => C('Plugins.Van2Shout.'.$role, ''));
-			$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
-			$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
-			$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
 		}
 
 		$ConfigurationModule->Schema($Schema);
@@ -76,21 +84,18 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render(dirname(__FILE__) . DS . 'views' . DS . 'settings.php');
 	}
 
-//	public function DiscussionsController_Render_Before($Sender) {
 	public function Base_Render_Before($Sender) {
-		$Session = GDN::Session();
-		if($Session->CheckPermission('Plugins.Van2Shout.View'))
-		{
-			//Display the delete icon?
-			if($Session->CheckPermission('Plugins.Van2Shout.Delete'))
-			{
-				$Sender->AddDefinition('Van2ShoutDelete', 'true');
-			}
+		if(VAN2SHOUT_ASSETTARGET != 'Panel')
+			return;
 
-			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
-			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
-			$Sender->AddModule($Van2ShoutDiscussionsModule);
-		}
+		$this->includev2s($Sender);
+	}
+
+	public function DiscussionsController_BeforeDiscussionTabsDiv_Handler($Sender) {
+		if(VAN2SHOUT_ASSETTARGET != 'Content')
+			return;
+
+		$this->includev2s($Sender);
 	}
 
 	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
@@ -144,7 +149,31 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render($this->GetView('usersettings.php'));
 	}
 
-	public function checkTableFormat()
+	private function includev2s($Sender)
+	{
+		$Session = GDN::Session();
+		if($Session->CheckPermission('Plugins.Van2Shout.View'))
+		{
+			//Display the delete icon?
+			if($Session->CheckPermission('Plugins.Van2Shout.Delete'))
+			{
+				$Sender->AddDefinition('Van2ShoutDelete', 'true');
+			}
+
+			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
+			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
+			if(VAN2SHOUT_ASSETTARGET == 'Content')
+			{
+				echo $Van2ShoutDiscussionsModule->ToString();
+			}
+			else
+			{
+				$Sender->AddModule($Van2ShoutDiscussionsModule);
+			}
+		}
+	}
+
+	private function checkTableFormat()
 	{
 	}
 
@@ -152,7 +181,6 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Construct = GDN::Structure();
 		$Construct->Table('Shoutbox');
 
-		//Define table structure. Don't drop table if it exists, but drop all deprecated columns
 		if(!$Construct->TableExists())
 		{
 			$Construct->PrimaryKey('ID')
