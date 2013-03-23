@@ -22,8 +22,21 @@ echo $this->Form->Errors();
 
 <h1>
 	<p style="font-size:18px"><?php echo T('Van2Shout'); ?></p>
-	<p><a style="margin-left:0px;" target="_blank" href="http://kenoschwalb.com/page/contact">Contact</a> | <a style="margin-left:0px;" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R9SQDYVYKKVCC">Buy me a coffe</a></p>
+	<p><a style="margin-left:0px;" target="_blank" href="http://kenoschwalb.com/page/contact">Contact</a> | <a style="margin-left:0px;" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R9SQDYVYKKVCC">Buy me a coffe</a></p><br />
 </h1>
+
+<div style="margin-left:20px;">
+	<br /><b>Use firebase for a faster chat!</b><br />
+	<div id="firebase">
+		Firebase is a service which provides hyper-fast and flexible databases.<br />
+		Van2Shout is able to switch its backend from vanillas MySQL database to firebase. Using firebase will make the shoutbox incredibly fast!<br />
+		Firebase is free while they are still in beta! Sign up <a href='http://firebase.com'>here</a>!<br />
+		Database URL:&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBUrl'); ?><br />
+		Firebase secret:&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
+		(Leave both fields blank to switch back to MySQL)<br /><br />
+		<input type="submit" class="Button" style="margin-left:0px;" value="Save" />
+	</div>
+</div>
 
 <table class="AltColumns">
 	<thead align="left">

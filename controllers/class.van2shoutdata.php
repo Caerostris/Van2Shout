@@ -143,6 +143,15 @@ class Van2ShoutData extends Gdn_Module {
 			));
 		}
 
+		if(!empty($_GET["newtoken"]))
+		{
+			include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'FirebaseToken.php');
+			$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.FBSecret', ''));
+			$auth_token = $tokenGen->createToken(array("id" => $uname));
+			Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "FirebaseToken", $auth_token);
+			echo $auth_token;
+		}
+
 		$String = ob_get_contents();
 		@ob_end_clean();
 

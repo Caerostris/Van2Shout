@@ -3,18 +3,27 @@
 		$Session = GDN::Session();
 		$uname = $Session->User->Name;
 
-		$tokenGen = new Services_FirebaseTokenGenerator("BGP4TgWgRe8wqiS5Qr3y2WDwD6dwiLaKxRQ1siop");
+		$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "FirebaseToken", "");
+		$auth_token = $metadata['FirebaseToken'];
 
-		$auth_token = $tokenGen->createToken(array("id" => $uname));
+		if($auth_token == "")
+		{
+			$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.FBSecret', ''));
+			$auth_token = $tokenGen->createToken(array("id" => $uname));
+			Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "FirebaseToken", $auth_token);
+		}
 		echo "var AUTH_TOKEN = '".$auth_token."';\n";
 	?>
 	var loggedInUname = "<?php echo $uname; ?>";
-	var firebase = new Firebase('https://van2shout.firebaseIO.com');
+	var firebase = new Firebase('<?php echo C('Plugin.Van2Shout.FBUrl', ''); ?>');
 	firebase.auth(AUTH_TOKEN, function(err)
 	{
 		if(err)
 		{
-			alert("Could not log in to firebase");
+			console.log("Login to firebase failed, trying to generate new auth token!");
+			$.get(gdn.url('plugin/Van2ShoutData?newtoken=1'), function(data){
+				console.log("This is the new token: " + data);
+			});
 		}
 		else
 		{
@@ -23,14 +32,40 @@
 	});
 
 	firebase.child('broadcast').on('child_added', function(snapshot) {
+		var obj = document.getElementById("van2shoutscroll");
+		//the slider currently is at the bottom ==> make it stay there after adding new posts
+		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
+			var scrolldown = true;
+		}
+		else
+		{
+			var scrolldown = false;
+		}
+
 		var msg = snapshot.val();
 		var timetext = '';
 		var time = moment.unix(msg.time).calendar();
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
 		$("#shoutboxcontent").append("<li>" + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
+
+		if(scrolldown == true)
+		{
+			obj.scrollTop = obj.scrollHeight;
+		}
+
 	});
 
 	firebase.child('private').on('child_added', function(snapshot) {
+		var obj = document.getElementById("van2shoutscroll");
+		//the slider currently is at the bottom ==> make it stay there after adding new posts
+		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
+			var scrolldown = true;
+		}
+		else
+		{
+			var scrolldown = false;
+		}
+
 		var msg = snapshot.val();
 		var pmtext = '';
 		var timetext = '';
@@ -50,6 +85,11 @@
 		}
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
 		$("#shoutboxcontent").append("<li>" + timetext + " <strong>" + pmtext + msg.content + "</strong></li>");
+
+		if(scrolldown == true)
+		{
+			obj.scrollTop = obj.scrollHeight;
+		}
 	});
 
 	function SubmitMessage()

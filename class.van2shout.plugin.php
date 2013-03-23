@@ -15,8 +15,14 @@
 //	 You should have received a copy of the GNU General Public License
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
-define('VAN2SHOUT_ASSETTARGET', 'Panel');
-define('USE_FIREBASE', true);
+if(C('Plugin.Van2Shout.FBUrl', '') != '' && C('Plugin.Van2Shout.FBSecret', '') != '')
+{
+	define('USE_FIREBASE', true);
+}
+else
+{
+	define('USE_FIREBASE', false);
+}
 
 if(C('Plugin.Van2Shout.ContentAsset', false))
 {
@@ -71,6 +77,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$RoleModel = new RoleModel();
 		$Roles = $RoleModel->Get();
 
+		$Schema['Plugin.Van2Shout.FBUrl'] = array('LabelCode' => 'FBUrl', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBUrl', ''));
+		$Schema['Plugin.Van2Shout.FBSecret'] = array('LabelCode' => 'FBSecret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBSecret', ''));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
 		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
