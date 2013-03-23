@@ -30,7 +30,7 @@ echo "<h4>Shoutbox</h4>\n";
 	{
 		echo "<form action='javascript:SubmitMessage();'>\n<input type='text' style='width:80%;' name='shoutboxinput' id='shoutboxinput' onkeydown='checkLength();' />";
 		echo "<img src='".Gdn::Request()->Domain()."/".Gdn::Request()->Webroot()."/applications/dashboard/design/images/progress.gif' style='display:none;' id='shoutboxloading' />\n";
-		echo "<input type='submit' value='->' id='van2shoutsubmit' name='van2shoutsubmit' />\n</form>\n";
+		echo "<input type='submit' value='Send' id='van2shoutsubmit' name='van2shoutsubmit' />\n</form>\n";
 	}
 ?>
 </div>
