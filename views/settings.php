@@ -31,10 +31,12 @@ echo $this->Form->Errors();
 		Firebase is a service which provides hyper-fast and flexible databases.<br />
 		Van2Shout is able to switch its backend from vanillas MySQL database to firebase. Using firebase will make the shoutbox incredibly fast!<br />
 		Firebase is free while they are still in beta! Sign up <a href='http://firebase.com'>here</a>!<br />
+		<b>After you created your firebase, make sure to add the <a id="fbruleslnk2" href="javascript:showRules();">Van2Shout security rules</a>!</b><br />
 		Database URL:&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBUrl'); ?><br />
 		Firebase secret:&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
 		(Leave both fields blank to switch back to MySQL)<br /><br />
-		<input type="submit" class="Button" style="margin-left:0px;" value="Save" />
+		<input type="submit" class="Button" style="margin-left:0px;" value="Save" /> <a id="fbruleslnk" href="javascript:showRules();">Show me Van2Shout's Firebase rules!</a>
+		<div id="fbrules" style="display:none;">Go to <?php $url = C('Plugin.Van2Shout.FBUrl', ''); if($url != '') { echo "<a href='".$url."' target='blank'>your firebase</a>"; } else { echo "your firebase"; } ?> and paste the following code at the "Security" tab:<pre><?php echo file_get_contents(PATH_ROOT.DS.'plugins'.DS.'Van2Shout'.DS.'firebase'.DS.'rules.firebase'); ?></pre></div>
 	</div>
 </div>
 
@@ -55,6 +57,22 @@ echo $this->Form->Errors();
 <script type="text/javascript">
 	var defaulttext = document.getElementById('assettext').innerHTML;
 	var id = 'assettext';
+
+	function showRules()
+	{
+		document.getElementById('fbruleslnk').href = 'javascript:hideRules();';
+		document.getElementById('fbruleslnk2').href = 'javascript:hideRules();';
+		document.getElementById('fbruleslnk').innerHTML = 'Hide Van2Shout\'s Firebase rules!';
+		document.getElementById('fbrules').style.display = 'inherit';
+	}
+
+	function hideRules()
+	{
+		document.getElementById('fbruleslnk').href = 'javascript:showRules();';
+		document.getElementById('fbruleslnk2').href = 'javascript:showRules();';
+		document.getElementById('fbruleslnk').innerHTML = 'Show me Van2Shout\'s Firebase rules!';
+		document.getElementById('fbrules').style.display = 'none';
+	}
 </script>
 
 <table class="AltColumns">

@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "broadcast": {
+      ".read": "auth != null",
+      "$key": {    
+        ".write": "!data.exists() && auth != null"
+      }
+    },
+    "private": {
+      ".write": "auth != null",
+      "$user": {
+        ".read": "auth.id == $user"
+      }
+    }
+  }
+}
