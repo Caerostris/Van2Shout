@@ -55,7 +55,7 @@
 
 	});
 
-	firebase.child('private').on('child_added', function(snapshot) {
+	firebase.child('private').child(loggedInUname).on('child_added', function(snapshot) {
 		var obj = document.getElementById("van2shoutscroll");
 		//the slider currently is at the bottom ==> make it stay there after adding new posts
 		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
@@ -81,7 +81,7 @@
 		}
 		else
 		{
-			pmtext = ' Some pm';
+			pmtext = 'Some pm';
 		}
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
 		$("#shoutboxcontent").append("<li>" + timetext + " <strong>" + pmtext + msg.content + "</strong></li>");
@@ -145,7 +145,8 @@
 
 	function firebase_push_pm(firebase, uname, to, content, callback)
 	{
-		firebase.push({uname: uname, to: to, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
+		firebase.child(to).push({uname: uname, to: to, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
+		firebase.child(uname).push({uname: uname, to: to, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
 	}
 
 	//return html code of delete button
