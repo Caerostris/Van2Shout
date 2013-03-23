@@ -11,14 +11,11 @@ No problem, just set the the colour on the settings page.
 ##Support for firebase
 With firebase, the shoutbox works incredibly smooth and fast!
 
-###Developer
-Keno Schwalb
+###Development
+Keno Schwalb & lifeisfoo
 
 ###Icon design
 Lars Sander
-
-###Contributor
-lifeisfoo
 
 ###License
 GPL v3
