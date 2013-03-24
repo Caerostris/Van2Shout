@@ -37,7 +37,7 @@ else
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
-	'Version' => '1.1',
+	'Version' => '1.05',
 	'Author' => "Caerostris",
 	'AuthorEmail' => 'caerostris@gmail.com',
 	'AuthorUrl' => 'http://caerostris.com',
