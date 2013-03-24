@@ -79,11 +79,12 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 
 		$Schema['Plugin.Van2Shout.FBUrl'] = array('LabelCode' => 'FBUrl', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBUrl', ''));
 		$Schema['Plugin.Van2Shout.FBSecret'] = array('LabelCode' => 'FBSecret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBSecret', ''));
-		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
-		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
+		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', false));
+		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
+		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
+		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
 		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
 		$Schema['Plugin.Van2Shout.MsgCount'] = array('LabelCode' => 'MsgCount', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.MsgCount', '50'));
-		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', false));
 
 		while($role = $Roles->Value('Name', NULL))
 		{
