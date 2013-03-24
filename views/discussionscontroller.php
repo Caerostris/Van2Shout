@@ -47,7 +47,8 @@ echo "<h4>Shoutbox</h4>\n";
 	<?php
 		if(VAN2SHOUT_ASSETTARGET == 'Content')
 		{
-			echo "	$('#van2shout').insertBefore('#Content');";
+			echo "$('#van2shout').prependTo('#Content');\n";
+			echo "$('#van2shout').insertAfter('.Info');\n";
 		}
 	?>
 
