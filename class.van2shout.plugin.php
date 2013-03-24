@@ -102,7 +102,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$this->includev2s($Sender);
 	}
 
-	public function DiscussionsController_BeforeDiscussionTabsDiv_Handler($Sender) {
+	public function DiscussionsController_Render_Before($Sender) {
 		if(VAN2SHOUT_ASSETTARGET != 'Content')
 			return;
 
@@ -179,14 +179,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 
 			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
 			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
-			if(VAN2SHOUT_ASSETTARGET == 'Content')
-			{
-				echo $Van2ShoutDiscussionsModule->ToString();
-			}
-			else
-			{
-				$Sender->AddModule($Van2ShoutDiscussionsModule);
-			}
+			$Sender->AddModule($Van2ShoutDiscussionsModule);
 		}
 	}
 

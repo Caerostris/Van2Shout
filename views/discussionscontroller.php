@@ -44,6 +44,13 @@ echo "<h4>Shoutbox</h4>\n";
 </div>
 <script src="<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/js/moment.min.js" type="text/javascript"></script>
 <script type="text/javascript">
+	<?php
+		if(VAN2SHOUT_ASSETTARGET == 'Content')
+		{
+			echo "	$('#van2shout').insertBefore('#Content');";
+		}
+	?>
+
 	var timecolour = "<?php echo C('Plugin.Van2Shout.TimeColour', 'grey'); ?>";
 
 	function checkLength()

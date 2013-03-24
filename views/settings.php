@@ -50,14 +50,11 @@ echo $this->Form->Errors();
 		<tr><td>Disable timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>Colour of the timestamp (Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
 		<tr><td>Update interval (Default: 5000)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
-		<tr><td>Set AssetTarget to 'Content' instead of 'Panel'</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.ContentAsset', ''); ?> <div id="assettext">In order to make this work, you need to modify a file. Click <a href="javascript:document.getElementById(id).innerHTML = 'In order to make this work, you have to add the following text to the file <code>application/vanilla/views/discussions/helper_functions.php</code><br />right below line 112:<br /><code>$Sender->FireEvent(\'BeforeDiscussionTabsDiv\');</code><br /><a href=\'javascript:document.getElementById(id).innerHTML = defaulttext;\'>hide</a>';">here</a> for more information</div></td></tr>
+		<tr><td>Display on the discussions page instead of Panel</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.ContentAsset', ''); ?></td></tr>
 	</tbody>
 </table>
 
 <script type="text/javascript">
-	var defaulttext = document.getElementById('assettext').innerHTML;
-	var id = 'assettext';
-
 	function showRules()
 	{
 		document.getElementById('fbruleslnk').href = 'javascript:hideRules();';
