@@ -24,7 +24,7 @@ else
 	define('USE_FIREBASE', false);
 }
 
-if(C('Plugin.Van2Shout.ContentAsset', false))
+if(C('Plugin.Van2Shout.ContentAsset', true))
 {
 	define('VAN2SHOUT_ASSETTARGET', 'Content');
 }
@@ -79,7 +79,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 
 		$Schema['Plugin.Van2Shout.FBUrl'] = array('LabelCode' => 'FBUrl', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBUrl', ''));
 		$Schema['Plugin.Van2Shout.FBSecret'] = array('LabelCode' => 'FBSecret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBSecret', ''));
-		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', false));
+		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', true));
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
