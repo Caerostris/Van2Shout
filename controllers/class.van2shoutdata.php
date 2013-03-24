@@ -39,7 +39,10 @@ class Van2ShoutData extends Gdn_Module {
 			//Display posts - format: User{,}post1[,]User{,}post2[,]... (other characters might be used while shoutboxing
 
 			//Get data from mysql DB
-			$posts = $SQL->Select('*')->From('Shoutbox')->BeginWhereGroup()->Where('PM', '')->OrWhere('PM', $Session->User->Name)->OrWhere('UserName', $Session->User->Name)->EndWhereGroup()->OrderBy('ID')->Limit($_GET["postcount"])->Get()->ResultArray();
+			$posts = $SQL->Select('*')->From('Shoutbox')->BeginWhereGroup()->Where('PM', '')->OrWhere('PM', $Session->User->Name)->OrWhere('UserName', $Session->User->Name)->EndWhereGroup()->OrderBy('ID')->Get()->ResultArray();
+
+			//I'd use the Limit function from vanillas SQL, but no matter where I put it, it just returns the OLDEST x messages
+			$posts = array_slice($posts, $_GET["postcount"]*(-1), $_GET["postcount"], true);
 
 			//Display data
 			foreach($posts as $msg)

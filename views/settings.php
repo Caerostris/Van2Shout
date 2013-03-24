@@ -50,6 +50,7 @@ echo $this->Form->Errors();
 		<tr><td>Disable timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>Colour of the timestamp (Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
 		<tr><td>Update interval (Default: 5000)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
+		<tr><td>Number of messages to display (Default: )</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
 		<tr><td>Display on the discussions page instead of Panel</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.ContentAsset', ''); ?></td></tr>
 	</tbody>
 </table>

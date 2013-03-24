@@ -13,7 +13,7 @@
 			var scrolldown = false;
 		}
 
-		$.get(gdn.url('plugin/Van2ShoutData?postcount=50'), function(data)
+		$.get(gdn.url('plugin/Van2ShoutData?postcount=<?php echo C('Plugin.Van2Shout.MsgCount', '50'); ?>'), function(data)
 		{
 			var string = "";
 

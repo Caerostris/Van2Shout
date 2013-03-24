@@ -14,6 +14,9 @@
 		}
 		echo "var AUTH_TOKEN = '".$auth_token."';\n";
 	?>
+	var messageCounter = 0;
+	var oldestID = 0;
+	var maxMessages = <?php echo C('Plugin.Van2Shout.MsgCount', '50') ?>;
 	var loggedInUname = "<?php echo $uname; ?>";
 	var firebase = new Firebase('<?php echo C('Plugin.Van2Shout.FBUrl', ''); ?>');
 	firebase.auth(AUTH_TOKEN, function(err)
@@ -32,6 +35,13 @@
 	});
 
 	firebase.child('broadcast').on('child_added', function(snapshot) {
+		messageCounter++;
+		if(messageCounter >= maxMessages)
+		{
+			$("#shout" + oldestID).remove();
+			oldestID++;
+		}
+
 		var obj = document.getElementById("van2shoutscroll");
 		//the slider currently is at the bottom ==> make it stay there after adding new posts
 		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
@@ -46,7 +56,7 @@
 		var timetext = '';
 		var time = moment.unix(msg.time).calendar();
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li>" + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
+		$("#shoutboxcontent").append("<li id=shout" + messageCounter + ">" + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
 
 		if(scrolldown == true)
 		{
@@ -56,6 +66,13 @@
 	});
 
 	firebase.child('private').child(loggedInUname).on('child_added', function(snapshot) {
+		messageCounter++;
+		if(messageCounter >= maxMessages)
+		{
+			$("#shout" + oldestID).remove();
+			oldestID++;
+		}
+
 		var obj = document.getElementById("van2shoutscroll");
 		//the slider currently is at the bottom ==> make it stay there after adding new posts
 		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
