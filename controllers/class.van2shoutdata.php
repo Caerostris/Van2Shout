@@ -15,9 +15,6 @@
 //	 You should have received a copy of the GNU General Public License
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
-//Override vanilla's default encoding UTF-8, with UTF-8 e.g. eblah² doesnt work (the ²)
-header('Content-Type: text/html; charset=ISO-8859-15');
-
 class Van2ShoutData extends Gdn_Module {
 
 	public function __connstruct($Sender = '') {
@@ -77,6 +74,9 @@ class Van2ShoutData extends Gdn_Module {
 		}
 
 		if(!empty($_GET["newpost"]) && empty($_GET["postcount"]) && empty($_GET["del"])) {
+			//Override vanilla's default encoding UTF-8, with UTF-8 e.g. eblah² doesnt work (the ²)
+			header('Content-Type: text/html; charset=ISO-8859-1');
+
 			if(!$Session->CheckPermission('Plugins.Van2Shout.Post')) {
 				return;
 			}
@@ -94,7 +94,7 @@ class Van2ShoutData extends Gdn_Module {
 			}
 
 			//Filter XSS and MySQL injections
-			$string = htmlspecialchars($string);
+			$string = htmlspecialchars($string, null, 'ISO-8859-1');
 			//Detect links starting with http:// or ftp://
 			$string = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="blank">\0</a>', $string);
 
@@ -126,7 +126,7 @@ class Van2ShoutData extends Gdn_Module {
 			$SQL->Insert('Shoutbox', array(
 				'UserName' => $username,
 				'PM' => $pm,
-				'Content' => $string,
+				'Content' => utf8_encode($string),
 				'Timestamp' => time()
 			));
 		}
