@@ -12,7 +12,7 @@ No problem, just set the the colour on the settings page.
 With firebase, the shoutbox works incredibly smooth and fast!
 
 ###Development
-Keno Schwalb & lifeisfoo
+Keno Schwalb & Alessandro Miliucci
 
 ###Icon design
 Lars Sander

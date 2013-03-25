@@ -16,7 +16,7 @@
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
 echo "<div id='van2shout' class='Box'>";
-echo "<h4>Shoutbox</h4>\n";
+echo "<h4>".T('Shoutbox')."</h4>\n";
 ?>
 
 <div id="van2shoutscroll">
