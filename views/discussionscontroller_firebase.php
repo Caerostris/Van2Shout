@@ -112,6 +112,10 @@
 	function SubmitMessage()
 	{
 		var msg = $("#shoutboxinput").val();
+
+        if (!msg) {
+            return;
+        }
 		if(msg == '/help')
 		{
 			v2s_help();
