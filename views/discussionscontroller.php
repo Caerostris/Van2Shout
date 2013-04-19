@@ -105,4 +105,8 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 		?>
 		overflow:auto;
 	}
+
+    #shoutboxcontent {
+        word-wrap: break-word;
+    }
 </style>
