@@ -3,14 +3,14 @@
 		$Session = GDN::Session();
 		$uname = $Session->User->Name;
 
-		$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "FirebaseToken", "");
-		$auth_token = $metadata['FirebaseToken'];
+		$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.FirebaseToken", "");
+		$auth_token = $metadata['Plugin.Van2Shout.FirebaseToken'];
 
 		if($auth_token == "")
 		{
 			$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.FBSecret', ''));
 			$auth_token = $tokenGen->createToken(array("id" => $uname));
-			Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "FirebaseToken", $auth_token);
+			Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "Plugin.Van2Shout.FirebaseToken", $auth_token);
 		}
 		echo "var AUTH_TOKEN = '".$auth_token."';\n";
 	?>
