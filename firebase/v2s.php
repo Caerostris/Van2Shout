@@ -21,8 +21,21 @@ function fb_new_token()
 {
 	$Session = GDN::Session();
 
+	if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
+		return;
+
 	$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.FBSecret', ''));
-	$auth_token = $tokenGen->createToken(array("id" => $Session->User->Name));
+
+	$conf = array("id" => $Session->User->Name);
+
+	if($Session->CheckPermission('Plugins.Van2Shout.Delete'))
+		$conf["delete"] = true;
+
+	if($Session->CheckPermission('Plugins.Van2Shout.Post'))
+		$conf["post"] = true;
+
+
+	$auth_token = $tokenGen->createToken($conf);
 	Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "Plugin.Van2Shout.FirebaseToken", $auth_token);
 
 	return $auth_token;

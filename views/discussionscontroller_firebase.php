@@ -44,16 +44,21 @@
 		}
 
 		var msg = snapshot.val();
+		var sn_name = snapshot.name();
 		var timetext = '';
 		var time = moment.unix(msg.time).calendar();
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li id=shout" + messageCounter + ">" + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
+		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
 
 		if(scrolldown == true)
 		{
 			obj.scrollTop = obj.scrollHeight;
 		}
 
+	});
+
+	firebase.child('broadcast').on('child_removed', function(snapshot) {
+		$("[name='" + snapshot.name() + "']").remove();
 	});
 
 	firebase.child('private').child(loggedInUname).on('child_added', function(snapshot) {
@@ -161,22 +166,20 @@
 		firebase.child(uname).push({uname: uname, to: to, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
 	}
 
+	function firebase_delete(firebase, name)
+	{
+		firebase.child(name).remove();
+	}
+
 	//return html code of delete button
-	function DeleteMsg(id)
+	function DeleteBttn(name)
 	{
 		var str = "";
 		if(gdn.definition('Van2ShoutDelete') == "true")
 		{
-			str = "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='DeletePost(\"" + id + "\");' /> ";
+			str = "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='firebase_delete(firebase.child(\"broadcast\"), \"" + name + "\");' /> ";
 		} else {
 			str = "";
 		}
 		return str;
-	}
-
-	function DeletePost(id)
-	{
-		//$.get(gdn.url('plugin/Van2ShoutData&del=' + id), function(data) {});
-		//setTimeout(UpdateShoutbox, 10);
-		//alert("Message deleted");
 	}
