@@ -3,7 +3,12 @@
 		$Session = GDN::Session();
 		$uname = $Session->User->Name;
 
+
+		$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+	        $usercolour = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour']);
+
 		echo "var AUTH_TOKEN = '".fb_get_token()."';\n";
+		echo "var usercolour = '".$usercolour."';\n";
 	?>
 	var messageCounter = 0;
 	var oldestID = 0;
@@ -49,7 +54,7 @@
 		var time = moment.unix(msg.time).calendar();
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
 		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
-
+		$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
 		if(scrolldown == true)
 		{
 			obj.scrollTop = obj.scrollHeight;
@@ -90,7 +95,7 @@
 		}
 		else if(msg.to == loggedInUname)
 		{
-			pmtext = "PM from " + "<a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: ";
+			pmtext = "PM from <a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: ";
 		}
 		else
 		{
@@ -157,7 +162,7 @@
 
 	function firebase_push(firebase, uname, content, callback)
 	{
-		firebase.push({uname: uname, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
+		firebase.push({uname: uname, colour: usercolour, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
 	}
 
 	function firebase_push_pm(firebase, uname, to, content, callback)

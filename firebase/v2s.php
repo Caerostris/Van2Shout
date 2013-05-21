@@ -34,6 +34,8 @@ function fb_new_token()
 	if($Session->CheckPermission('Plugins.Van2Shout.Post'))
 		$conf["post"] = true;
 
+	$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+	$conf["colour"] = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour']);
 
 	$auth_token = $tokenGen->createToken($conf);
 	Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "Plugin.Van2Shout.FirebaseToken", $auth_token);

@@ -3,7 +3,7 @@
     "broadcast": {
       ".read": "auth != null",
       "$key": {    
-        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true"
+        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true != data.child('colour').val()"
       }
     },
     "private": {

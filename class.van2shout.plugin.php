@@ -153,6 +153,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 					if($UserRole["Name"] == $MetaKey)
 					{
 						$this->SetUserMeta($Session->UserID, "Colour", $UserRole["Name"]);
+						include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
+						new_token();
 						$Sender->StatusMessage = T("Your changes have been saved.");
 					}
 				}
