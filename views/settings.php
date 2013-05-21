@@ -30,7 +30,7 @@ echo $this->Form->Errors();
 	<div id="firebase">
 		Firebase is a service which provides hyper-fast and flexible databases.<br />
 		Van2Shout is able to switch its backend from vanillas MySQL database to firebase. Using firebase will make the shoutbox incredibly fast!<br />
-		Firebase is free while they are still in beta! Sign up <a href='http://firebase.com'>here</a>!<br />
+		Firebase should be free for all shoutboxes (you get 20$ free credit every month) Sign up <a href='http://firebase.com'>here</a>!<br />
 		<b>After you created your firebase, make sure to add the <a id="fbruleslnk2" href="javascript:showRules();">Van2Shout security rules</a>!</b><br />
 		Database URL:&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBUrl'); ?><br />
 		Firebase secret:&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
