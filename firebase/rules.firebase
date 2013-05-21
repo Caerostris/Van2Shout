@@ -3,12 +3,14 @@
     "broadcast": {
       ".read": "auth != null",
       "$key": {    
-        ".write": "!data.exists() && auth != null"
+        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true"
       }
     },
     "private": {
-      ".write": "auth != null",
       "$user": {
+        "$key": {
+          ".write": "auth != null && !data.exists() && auth.post == true"
+        },
         ".read": "auth.id == $user"
       }
     }
