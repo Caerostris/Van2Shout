@@ -22,7 +22,7 @@ echo $this->Form->Errors();
 
 <h1>
 	<p style="font-size:18px"><?php echo T('Van2Shout'); ?></p>
-	<p><a style="margin-left:0px;" target="_blank" href="http://kenoschwalb.com/page/contact">Contact</a> | <a style="margin-left:0px;" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R9SQDYVYKKVCC">Buy me a coffe</a></p><br />
+	<p><a style="margin-left:0px;" target="_blank" href="http://kenoschwalb.com/page/contact">Contact</a> | <a style="margin-left:0px;" target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=R9SQDYVYKKVCC">Buy me a coffee</a></p><br />
 </h1>
 
 <div style="margin-left:20px;">
