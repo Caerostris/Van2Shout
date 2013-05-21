@@ -38,7 +38,7 @@ class Van2ShoutData extends Gdn_Module {
 			//Get data from mysql DB
 			$posts = $SQL->Select('*')->From('Shoutbox')->BeginWhereGroup()->Where('PM', '')->OrWhere('PM', $Session->User->Name)->OrWhere('UserName', $Session->User->Name)->EndWhereGroup()->OrderBy('ID')->Get()->ResultArray();
 
-			//I'd use the Limit function from vanillas SQL, but no matter where I put it, it just returns the OLDEST x messages
+			//I'd use the Limit function from vanillas SQL, but no matter where I put it, OrderBy just returns the OLDEST x messages
 			$posts = array_slice($posts, $_GET["postcount"]*(-1), $_GET["postcount"], true);
 
 			//Display data
@@ -154,6 +154,11 @@ class Van2ShoutData extends Gdn_Module {
 
 		$String = ob_get_contents();
 		@ob_end_clean();
+
+		if(!empty($_GET["reset_tokens"]))
+		{
+			$posts = $SQL->Delete('UserMeta', array('Name' => 'Plugin.Van2Shout.FirebaseToken'));
+		}
 
 		return $String;
 	}
