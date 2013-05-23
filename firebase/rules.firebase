@@ -3,13 +3,13 @@
     "broadcast": {
       ".read": "auth != null",
       "$key": {    
-        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true != data.child('colour').val()"
+        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true && newData.child('colour').val() == auth.colour && auth.id == newData.child('uname').val()"
       }
     },
     "private": {
       "$user": {
         "$key": {
-          ".write": "auth != null && !data.exists() && auth.post == true"
+          ".write": "auth != null && !data.exists() && auth.post == true && auth.id == newData.child('uname').val()"
         },
         ".read": "auth.id == $user"
       }
