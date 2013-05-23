@@ -38,8 +38,11 @@ echo $this->Form->Errors();
 				$data[$UserRole["Name"]] = $UserRole["Name"]." (".C('Plugins.Van2Shout.'.$UserRole["Name"], 'Theme default').")";
 			}
 
+			$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+			$currentColour = $metadata['Plugin.Van2Shout.Colour'];
+
 			echo "Select the group that should be used for the Shoutbox colour:<br />";
-			echo $this->Form->DropDown('Plugin.Van2Shout.UserColour', $data);
+			echo $this->Form->DropDown('Plugin.Van2Shout.UserColour', $data, array('Value' => $currentColour));
 		?>
 	</li>
 
