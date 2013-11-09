@@ -39,7 +39,7 @@
 					var time = moment.unix(id[1]).calendar();
 					var timetext = '';
 					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'>PM from <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a>: " + idArray[0] + "</strong></li>";
+					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'>PM from <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
 				}
 				else if (unparsed.indexOf('[!pmtocontent!]') != -1)
 				{
@@ -49,7 +49,7 @@
 					var time = moment.unix(id[1]).calendar();
 					var timetext = '';
 					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong class='pmto'>PM to <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a>: " + idArray[0] + "</strong></li>";
+					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong class='pmto'>PM to <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
 				}
 				else
 					{
@@ -59,7 +59,7 @@
 					var time = moment.unix(id[1]).calendar();
 					var timetext = '';
 					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'><a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a>: " + idArray[0] + "</strong></li>";
+					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'><a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
 				}
 
 				string = string + '<style type="text/css">#post' + id[0] + ' a { color:' + colourArray[0] + '; } #post' + id[0] + ' a:hover { text-decoration:underline; }</style>';
