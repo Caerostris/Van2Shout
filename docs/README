@@ -23,4 +23,7 @@ Delete mysql table <VanillaDB>.GDN_Shoutbox
 Go to dashboard and disable the plugin
 Delete <VanillaDir>/plugins/Van2Shout
 Extract Van2Shout.zip into <VanillaDir>/plugins/
-If it doesn't work out of the box: remove the MySQL table GDN_Shoutbox, disable and re-enable Van2Shout
+If this breaks Van2Shout, you have to remove the database table GDN_Shoutbox, disable Van2Shout and re-enable it.
+
+IF YOU ARE USING FIREBASE
+Make sure to UPDATE YOUR SECURITY RULES and Reset the firebase tokens.

@@ -9,7 +9,7 @@
     "private": {
       "$user": {
         "$key": {
-          ".write": "auth != null && !data.exists() && auth.post == true && auth.id == newData.child('uname').val()"
+          ".write": "((auth != null && !data.exists() && auth.post == true && auth.id == newData.child('uname').val()) || (auth.id == $user))"
         },
         ".read": "auth.id == $user"
       }

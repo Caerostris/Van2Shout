@@ -53,7 +53,7 @@
 		var timetext = '';
 		var time = moment.unix(msg.time).calendar();
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: " + msg.content + "</strong></li>");
+		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + msg.content + "</li>");
 		$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
 		if(scrolldown == true)
 		{
@@ -63,6 +63,10 @@
 	});
 
 	firebase.child('broadcast').on('child_removed', function(snapshot) {
+		$("[name='" + snapshot.name() + "']").remove();
+	});
+
+	firebase.child('private').child(loggedInUname.toLowerCase()).on('child_removed', function(snapshot) {
 		$("[name='" + snapshot.name() + "']").remove();
 	});
 
@@ -91,18 +95,18 @@
 
 		if(msg.uname == loggedInUname)
 		{
-			pmtext = "PM to " + "<a href='" + gdn.url('profile/' + msg.to) + "' target='blank'>" + msg.to + "</a>: ";
+			pmtext = " <strong>PM to <a href='" + gdn.url('profile/' + msg.to) + "' target='blank'>" + msg.to + "</a></strong>: ";
 		}
 		else if(msg.to == loggedInUname)
 		{
-			pmtext = "PM from <a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a>: ";
+			pmtext = " <strong>PM from <a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: ";
 		}
 		else
 		{
 			pmtext = 'Some pm';
 		}
 		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li>" + timetext + " <strong>" + pmtext + msg.content + "</strong></li>");
+		$("#shoutboxcontent").append("<li name='" + snapshot.name() + "'>" + DeletePmBttn(snapshot.name()) + timetext + pmtext + msg.content + "</li>");
 
 		if(scrolldown == true)
 		{
@@ -180,11 +184,16 @@
 	function DeleteBttn(name)
 	{
 		var str = "";
-		if(gdn.definition('Van2ShoutDelete') == "true")
+		if((gdn.definition('Van2ShoutDelete') == "true"))
 		{
 			str = "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='firebase_delete(firebase.child(\"broadcast\"), \"" + name + "\");' /> ";
 		} else {
 			str = "";
 		}
 		return str;
+	}
+
+	function DeletePmBttn(name)
+	{
+		return "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='firebase_delete(firebase.child(\"private\").child(\"" + loggedInUname.toLowerCase()  + "\"), \"" + name + "\");' /> ";
 	}
