@@ -1,7 +1,7 @@
 /--------------------------------------------------------------------------------\
 |    Name:                 Van2Shout                                             |
 |    Description:          A simple shoutbox for vanilla2 with group support     |
-|    Version:              1.1                                                   |
+|    Version:              1.053                                                 |
 |    Author:               Caerostris                                            |
 |    Author homepage:      http://caerostris.com                                 |
 |    Contact:              <caerostris@gmail.com>                                |
@@ -18,7 +18,6 @@ Go to Dashboard->Roles & Permissions and set which group can post/view.
 Go to dashboard and disable the plugin
 Delete <VanillaDir>/plugins/Van2Shout (if it still exists)
 Delete mysql table <VanillaDB>.GDN_Shoutbox
-
 
 --Uprade:
 Go to dashboard and disable the plugin
