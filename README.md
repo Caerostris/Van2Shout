@@ -18,7 +18,7 @@ Keno Schwalb
 [lifeisfoo](http://vanillaforums.org/profile/43188/lifeisfoo)
 
 ###Thanks
-Many thanks to
+Many thanks to   
 [lifeisfoo](http://vanillaforums.org/profile/43188/lifeisfoo)   
 [vrijvlinder](http://vanillaforums.org/profile/40152/vrijvlinder)   
 and   
