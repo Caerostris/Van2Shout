@@ -66,7 +66,7 @@
 		$("[name='" + snapshot.name() + "']").remove();
 	});
 
-	firebase.child('private').child(loggedInUname).on('child_added', function(snapshot) {
+	firebase.child('private').child(loggedInUname.toLowerCase()).on('child_added', function(snapshot) {
 		messageCounter++;
 		if(messageCounter >= maxMessages)
 		{
@@ -127,7 +127,7 @@
 		if(msg.indexOf('/w ') == 0)
 		{
 			var substr = msg.substr(3, msg.length);
-			var uname = substr.substr(0, substr.indexOf(' '));
+			var uname = substr.substr(0, substr.indexOf(' ')).toLowerCase();
 			var msg = substr.substr(substr.indexOf(' '), substr.length);
 
 			firebase_push_pm(firebase.child('private'), loggedInUname, uname, msg, function(err)
