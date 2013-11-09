@@ -29,11 +29,11 @@ echo $this->Form->Errors();
 	<br /><b>Use firebase for a faster chat!</b><br />
 	<div id="firebase">
 		Firebase is a service which provides hyper-fast and flexible databases.<br />
-		Van2Shout is able to switch its backend from vanillas MySQL database to firebase. Using firebase will make the shoutbox incredibly fast!<br />
-		Firebase should be free for all shoutboxes (you get 20$ free credit every month) Sign up <a href='http://firebase.com'>here</a>!<br />
+		Van2Shout is able to switch its backend from Vanilla's MySQL database to Firebase. Using Firebase will make the shoutbox incredibly fast!<br />
+		Firebase should be free for all shoutboxes. (The free version is quite limited, but we don't need much) Sign up <a href='http://firebase.com' target='_blank'>here</a>!<br />
 		<b>After you created your firebase, make sure to add the <a id="fbruleslnk2" href="javascript:show_rules();">Van2Shout security rules</a>!</b><br />
 		Database URL:&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBUrl'); ?><br />
-		Firebase secret:&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
+		Firebase secret:&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
 		(Leave both fields blank to switch back to MySQL)<br /><br />
 		<input type="submit" class="Button" style="margin-left:0px;" value="Save" /> <a id="fbruleslnk" href="javascript:show_rules();">Show me Van2Shout's Firebase rules</a> | <a href="javascript:reset_tokens();">Reset firebase tokens</a>
 		<div id="fbrules" style="display:none;">Go to <?php $url = C('Plugin.Van2Shout.FBUrl', ''); if($url != '') { echo "<a href='".$url."' target='blank'>your firebase</a>"; } else { echo "your firebase"; } ?> and paste the following code at the "Security" tab:<pre><?php echo file_get_contents(PATH_ROOT.DS.'plugins'.DS.'Van2Shout'.DS.'firebase'.DS.'rules.firebase'); ?></pre></div>
@@ -43,16 +43,16 @@ echo $this->Form->Errors();
 <table class="AltColumns">
 	<thead align="left">
 		<tr>
-			<th width="20%">Option</th><th>Value</th>
+			<th width="25%">Option</th><th>Value</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr><td>Display on the discussions page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.ContentAsset', ''); ?></td></tr>
 		<tr><td>Disable timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>'Send' button text</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.SendText'); ?></td></tr>
-		<tr><td>Colour of the timestamp (Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
-		<tr><td>Update interval (Default: 5000)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
-		<tr><td>Number of messages to display (Default: 50)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
+		<tr><td>Timestamp colour<br />(Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
+		<tr><td>Update interval in seconds<br />(Default: 5)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
+		<tr><td>Number of messages to display<br />(Default: 50)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
 	</tbody>
 </table>
 
@@ -84,7 +84,7 @@ echo $this->Form->Errors();
 <table class="AltColumns">
 	<thead align="left">
 		<tr>
-			<th width="20%">Role</th><th>Colours <a href="javascript:gdn.informMessage('Any HTML compatible colour (e.g. a hex colour)');">?</a></th></th>
+			<th width="20%">Role</th><th>Colour <a href="javascript:gdn.informMessage('Any HTML compatible colour (e.g. a hex colour)');">?</a></th></th>
 		</tr>
 	</thead>
 	<tbody>

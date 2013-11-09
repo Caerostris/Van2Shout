@@ -37,7 +37,7 @@ else
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
-	'Version' => '1.052',
+	'Version' => '1.053',
 	'Author' => "Caerostris",
 	'AuthorEmail' => 'caerostris@gmail.com',
 	'AuthorUrl' => 'http://caerostris.com',
@@ -83,7 +83,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
-		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5000'));
+		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5'));
 		$Schema['Plugin.Van2Shout.MsgCount'] = array('LabelCode' => 'MsgCount', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.MsgCount', '50'));
 
 		while($role = $Roles->Value('Name', NULL))

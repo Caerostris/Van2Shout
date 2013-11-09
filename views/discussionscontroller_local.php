@@ -1,5 +1,5 @@
 	jQuery(document).ready(function($) { UpdateShoutbox(); });
-	setInterval('UpdateShoutbox()', <?php echo C('Plugin.Van2Shout.Interval', 5000); ?>);
+	setInterval('UpdateShoutbox()', <?php echo(C('Plugin.Van2Shout.Interval', 5) * 1000); ?>);
 
 	function UpdateShoutbox()
 	{
