@@ -14,6 +14,18 @@ With firebase, the shoutbox works incredibly smooth and fast!
 ###Development
 Keno Schwalb
 
+###Contributors
+[lifeisfoo](http://vanillaforums.org/profile/43188/lifeisfoo)
+
+###Thanks
+Many thanks to
+[lifeisfoo](http://vanillaforums.org/profile/43188/lifeisfoo)
+[vrijvlinder](http://vanillaforums.org/profile/40152/vrijvlinder)
+and
+[hgtonight](http://vanillaforums.org/profile/38268/hgtonight)
+who regularly help out people at vf.org when I'm not there.
+You think your name should be in this list? Message me and I'll add it :P
+
 ###Icon design
 Lars Sander
 
