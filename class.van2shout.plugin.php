@@ -169,6 +169,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Session = GDN::Session();
 		if($Session->CheckPermission('Plugins.Van2Shout.View'))
 		{
+			$Sender->AddJsFile('emojify.min.js', 'plugins/Van2Shout/js');
+
 			//Include firebase script?
 			if(USE_FIREBASE)
 			{

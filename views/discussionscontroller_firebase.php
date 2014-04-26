@@ -60,6 +60,7 @@
 			obj.scrollTop = obj.scrollHeight;
 		}
 
+		emojify.run();
 	});
 
 	firebase.child('broadcast').on('child_removed', function(snapshot) {
@@ -112,6 +113,8 @@
 		{
 			obj.scrollTop = obj.scrollHeight;
 		}
+
+		emojify.run();
 	});
 
 	function SubmitMessage()

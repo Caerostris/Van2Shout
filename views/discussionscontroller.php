@@ -87,12 +87,23 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 		return str;
 	}
 
+	emojify.setConfig({
+		emojify_tag_type: 'div',
+		only_crawl_id: 'van2shout',
+		img_dir: 'plugins/Van2Shout/img/emoji',
+		ignore_tags: {
+			'SCRIPT': 1,
+			'A': 1,
+			'PRE': 1,
+			'CODE': 1
+		}
+	});
+
 	<?php include(USE_FIREBASE ? dirname(__FILE__).DS.'discussionscontroller_firebase.php' : dirname(__FILE__).DS.'discussionscontroller_local.php'); ?>
 </script>
 
 <style type="text/css">
-	#van2shoutscroll
-	{
+	#van2shoutscroll {
 		<?php
 		if(VAN2SHOUT_ASSETTARGET == 'Content')
 		{
@@ -106,7 +117,14 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 		overflow:auto;
 	}
 
-    #shoutboxcontent {
-        word-wrap: break-word;
-    }
+	#shoutboxcontent {
+		word-wrap: break-word;
+	}
+
+	.emoji {
+		width: 1.5em;
+		height: 1.5em;
+		display: inline-block;
+		margin-bottom: -0.25em;
+	}
 </style>

@@ -72,6 +72,8 @@
 			{
 				obj.scrollTop = obj.scrollHeight;
 			}
+
+			emojify.run();
 		});
 	}
 
