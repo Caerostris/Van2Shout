@@ -4,8 +4,8 @@ A simple shoutbox for vanilla2 with support for different groups and private mes
 ##Private messages
 Just put /w {Username} in front of your message to PM somebody
 
-##Emoticons
-Emojify.js integration helps you express your feelings ![:)](https://dl.dropboxusercontent.com/s/ffkwgw4rpj5e0z8/smiley_small.png?dl=1&token_hash=AAEEuI39HG62pTmpaSyWV6Cp9ynWbzKQZqJU_2x19CfB-g)
+##Emoticons ![:)](https://dl.dropboxusercontent.com/s/ffkwgw4rpj5e0z8/smiley_small.png?dl=1&token_hash=AAEEuI39HG62pTmpaSyWV6Cp9ynWbzKQZqJU_2x19CfB-g)
+Emojify.js integration helps you express your feelings
 
 ##Group based colours
 Want your Administrators to shine in bright red?
