@@ -67,7 +67,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 	}
 
 	public function SettingsController_Van2Shout_Create($Sender) {
-		$Sender->Permission('Garden.Plugins.Manage');
+		$Sender->Permission('Garden.Settings.Manage');
 		$Sender->AddSideMenu();
 		$Sender->Title('Van2Shout Settings');
 
