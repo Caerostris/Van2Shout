@@ -39,8 +39,6 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 	$('#van2shout').prependTo('#Content');
 	$('#van2shout').insertAfter('.Info');
 
-	var timecolour = "<?php echo C('Plugin.Van2Shout.TimeColour', 'grey'); ?>";
-
 	function checkLength()
 	{
 		if($("#shoutboxinput").val().length > 148)

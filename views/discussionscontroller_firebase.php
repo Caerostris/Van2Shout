@@ -1,120 +1,113 @@
-<?php
-		include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
-		$Session = GDN::Session();
-		$uname = $Session->User->Name;
-
-
-		$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
-	        $usercolour = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour']);
-
-		echo "var AUTH_TOKEN = '".fb_get_token()."';\n";
-		echo "var usercolour = '".$usercolour."';\n";
-	?>
 	var messageCounter = 0;
 	var oldestID = 0;
-	var maxMessages = <?php echo C('Plugin.Van2Shout.MsgCount', '50') ?>;
-	var loggedInUname = "<?php echo $uname; ?>";
-	var firebase = new Firebase('<?php echo C('Plugin.Van2Shout.Firebase.Url', ''); ?>');
-	firebase.auth(AUTH_TOKEN, function(err)
-	{
-		if(err)
+	var firebase;
+	jQuery(document).ready(function($) {
+		firebase = new Firebase(gdn.definition('Van2ShoutFirebaseUrl'));
+		firebase.auth(gdn.definition('Van2ShoutFirebaseToken'), function(err)
 		{
-			console.log("Login to firebase failed, trying to generate new auth token!");
-			$.get(gdn.url('plugin/Van2ShoutData?newtoken=1'), function(data){
-				console.log("This is the new token: " + data);
-			});
-		}
-		else
-		{
-			console.log("Login to firebase succeeded!");
-		}
-	});
+			if(err)
+			{
+				console.log("Login to firebase failed, trying to generate new auth token!");
+				$.get(gdn.url('plugin/Van2ShoutData?newtoken=1'), function(data){
+					console.log("This is the new token: " + data);
+				});
+			}
+			else
+			{
+				console.log("Login to firebase succeeded!");
+			}
+		});
 
-	firebase.child('broadcast').on('child_added', function(snapshot) {
-		messageCounter++;
-		if(messageCounter >= maxMessages)
-		{
-			$("#shout" + oldestID).remove();
-			oldestID++;
-		}
+		firebase.child('broadcast').on('child_added', function(snapshot) {
+			messageCounter++;
+			if(messageCounter >= parseInt(gdn.definition('Van2ShoutMessageCount')))
+			{
+				$("#shout" + oldestID).remove();
+				oldestID++;
+			}
 
-		var obj = document.getElementById("van2shoutscroll");
-		//the slider currently is at the bottom ==> make it stay there after adding new posts
-		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
-			var scrolldown = true;
-		}
-		else
-		{
-			var scrolldown = false;
-		}
+			var obj = document.getElementById("van2shoutscroll");
+			//the slider currently is at the bottom ==> make it stay there after adding new posts
+			if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
+				var scrolldown = true;
+			}
+			else
+			{
+				var scrolldown = false;
+			}
 
-		var msg = snapshot.val();
-		var sn_name = snapshot.name();
-		var timetext = '';
-		var time = moment.unix(msg.time).calendar();
-		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + msg.content + "</li>");
-		$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
-		if(scrolldown == true)
-		{
-			obj.scrollTop = obj.scrollHeight;
-		}
+			var msg = snapshot.val();
+			var sn_name = snapshot.name();
+			var timetext = '';
+			var time = moment.unix(msg.time).calendar();
+			if(gdn.definition('Van2ShoutTimestamp') == 'true')
+				timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 
-		emojify.run();
-	});
+			$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='" + sn_name + "'>" + DeleteBttn(sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + msg.content + "</li>");
+			$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
+			if(scrolldown == true)
+			{
+				obj.scrollTop = obj.scrollHeight;
+			}
 
-	firebase.child('broadcast').on('child_removed', function(snapshot) {
-		$("[name='" + snapshot.name() + "']").remove();
-	});
+			emojify.run();
+		});
 
-	firebase.child('private').child(loggedInUname.toLowerCase()).on('child_removed', function(snapshot) {
-		$("[name='" + snapshot.name() + "']").remove();
-	});
+		firebase.child('broadcast').on('child_removed', function(snapshot) {
+			$("[name='" + snapshot.name() + "']").remove();
+		});
 
-	firebase.child('private').child(loggedInUname.toLowerCase()).on('child_added', function(snapshot) {
-		messageCounter++;
-		if(messageCounter >= maxMessages)
-		{
-			$("#shout" + oldestID).remove();
-			oldestID++;
-		}
+		firebase.child('private').child(gdn.definition('UserName').toLowerCase()).on('child_removed', function(snapshot) {
+			$("[name='" + snapshot.name() + "']").remove();
+		});
 
-		var obj = document.getElementById("van2shoutscroll");
-		//the slider currently is at the bottom ==> make it stay there after adding new posts
-		if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
-			var scrolldown = true;
-		}
-		else
-		{
-			var scrolldown = false;
-		}
+		firebase.child('private').child(gdn.definition('UserName').toLowerCase()).on('child_added', function(snapshot) {
+			messageCounter++;
+			if(messageCounter >= parseInt(gdn.definition('Van2ShoutMessageCount')))
+			{
+				$("#shout" + oldestID).remove();
+				oldestID++;
+			}
 
-		var msg = snapshot.val();
-		var pmtext = '';
-		var timetext = '';
-		var time = moment.unix(msg.time).calendar();
+			var obj = document.getElementById("van2shoutscroll");
+			//the slider currently is at the bottom ==> make it stay there after adding new posts
+			if(obj.scrollTop == (obj.scrollHeight - obj.offsetHeight)) {
+				var scrolldown = true;
+			}
+			else
+			{
+				var scrolldown = false;
+			}
 
-		if(msg.uname == loggedInUname)
-		{
-			pmtext = " <strong>PM to <a href='" + gdn.url('profile/' + msg.to) + "' target='blank'>" + msg.to + "</a></strong>: ";
-		}
-		else if(msg.to == loggedInUname)
-		{
-			pmtext = " <strong>PM from <a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: ";
-		}
-		else
-		{
-			pmtext = 'Some pm';
-		}
-		<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";\n"; } ?>
-		$("#shoutboxcontent").append("<li name='" + snapshot.name() + "'>" + DeletePmBttn(snapshot.name()) + timetext + pmtext + msg.content + "</li>");
+			var msg = snapshot.val();
+			var pmtext = '';
+			var timetext = '';
+			var time = moment.unix(msg.time).calendar();
 
-		if(scrolldown == true)
-		{
-			obj.scrollTop = obj.scrollHeight;
-		}
+			if(msg.uname == gdn.definition('UserName'))
+			{
+				pmtext = " <strong>PM to <a href='" + gdn.url('profile/' + msg.to) + "' target='blank'>" + msg.to + "</a></strong>: ";
+			}
+			else if(msg.to == gdn.definition('UserName'))
+			{
+				pmtext = " <strong>PM from <a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: ";
+			}
+			else
+			{
+				pmtext = 'Some pm';
+			}
+			if(gdn.definition('Van2ShoutTimestamp') == 'true')
+				timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 
-		emojify.run();
+			$("#shoutboxcontent").append("<li name='" + snapshot.name() + "'>" + DeletePmBttn(snapshot.name()) + timetext + pmtext + msg.content + "</li>");
+
+			if(scrolldown == true)
+			{
+				obj.scrollTop = obj.scrollHeight;
+			}
+
+			emojify.run();
+		});
 	});
 
 	function SubmitMessage()
@@ -137,7 +130,7 @@
 			var uname = substr.substr(0, substr.indexOf(' ')).toLowerCase();
 			var msg = substr.substr(substr.indexOf(' '), substr.length);
 
-			firebase_push_pm(firebase.child('private'), loggedInUname, uname, msg, function(err)
+			firebase_push_pm(firebase.child('private'), gdn.definition('UserName'), uname, msg, function(err)
 			{
 				if(err != null)
 				{
@@ -150,7 +143,7 @@
 		}
 		else
 		{
-			firebase_push(firebase.child('broadcast'), loggedInUname, msg, function(err)
+			firebase_push(firebase.child('broadcast'), gdn.definition('UserName'), msg, function(err)
 			{
 				if(err != null)
 				{
@@ -169,7 +162,7 @@
 
 	function firebase_push(firebase, uname, content, callback)
 	{
-		firebase.push({uname: uname, colour: usercolour, content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
+		firebase.push({uname: uname, colour: gdn.definition('Van2ShoutUserColor'), content: content, time: Math.round((new Date()).getTime() / 1000)}, callback);
 	}
 
 	function firebase_push_pm(firebase, uname, to, content, callback)
@@ -198,5 +191,5 @@
 
 	function DeletePmBttn(name)
 	{
-		return "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='firebase_delete(firebase.child(\"private\").child(\"" + loggedInUname.toLowerCase()  + "\"), \"" + name + "\");' /> ";
+		return "<img src='<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/img/del.png' onClick='firebase_delete(firebase.child(\"private\").child(\"" + gdn.definition('UserName').toLowerCase()  + "\"), \"" + name + "\");' /> ";
 	}

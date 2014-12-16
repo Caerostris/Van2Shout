@@ -1,5 +1,7 @@
-	jQuery(document).ready(function($) { UpdateShoutbox(); });
-	setInterval('UpdateShoutbox()', <?php echo(C('Plugin.Van2Shout.Interval', 5) * 1000); ?>);
+	jQuery(document).ready(function($) {
+		UpdateShoutbox();
+		setInterval('UpdateShoutbox()', parseInt(gdn.definition('Van2ShoutUpdateInterval')));
+	});
 
 	function UpdateShoutbox()
 	{
@@ -13,58 +15,32 @@
 			var scrolldown = false;
 		}
 
-		$.get(gdn.url('plugin/Van2ShoutData?postcount=<?php echo C('Plugin.Van2Shout.MsgCount', '50'); ?>'), function(data)
+		$.get(gdn.url('plugin/Van2ShoutData?postcount=' + gdn.definition('Van2ShoutMessageCount')), function(data)
 		{
 			var string = "";
+			var posts = JSON.parse(data);
 
-			var array = unescape(data).split("\n");
-			for(var key in array)
-			{
-				var unparsed = array[key];
+			for(var i = 0; i < posts.length; i++) {
+				var timetext = '';
+				var private_text = '';
+				var user = posts[i]['user']
 
-				if(unparsed == "")
-				{
-					break;
+				if(gdn.definition('Van2ShoutTimestamp') == 'true') {
+					var time = moment.unix(posts[i].time).calendar();
+					timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 				}
 
-				var colourArray = unparsed.split("[!colour!]");
-
-				unparsed = colourArray[1];
-				//render PMs
-				if(unparsed.indexOf('[!pmcontent!]') != -1)
-				{
-					var parsedArray = unparsed.split("[!pmcontent!]");
-					var idArray = parsedArray[1].split("[!msgid!]");
-					var id = idArray[1].split("[!msgtime!]");
-					var time = moment.unix(id[1]).calendar();
-					var timetext = '';
-					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'>PM from <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
-				}
-				else if (unparsed.indexOf('[!pmtocontent!]') != -1)
-				{
-					var parsedArray = unparsed.split("[!pmtocontent!]");
-					var idArray = parsedArray[1].split("[!msgid!]");
-					var id = idArray[1].split("[!msgtime!]");
-					var time = moment.unix(id[1]).calendar();
-					var timetext = '';
-					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong class='pmto'>PM to <a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
-				}
-				else
-					{
-					var parsedArray = unparsed.split("[!content!]");
-					var idArray = parsedArray[1].split("[!msgid!]");
-					var id = idArray[1].split("[!msgtime!]");
-					var time = moment.unix(id[1]).calendar();
-					var timetext = '';
-					<?php if(!C('Plugin.Van2Shout.Timestamp', false)) { echo "timetext = \"<font color='\" + timecolour + \"'>[\" + time + \"]</font>\";"; } ?>
-					string = string + "<li>" + DeleteMsg(id[0]) + timetext + " <strong id='post" + id[0] + "'><a href='" + gdn.url('profile/' + parsedArray[0]) + "' target='blank' >" + parsedArray[0] + "</a></strong>: " + idArray[0] + "</li>";
+				if(posts[i]['type'] == 'private') {
+					if(posts[i]['recipient'] == gdn.definition('UserName')) {
+						private_text = 'PM from ';
+					} else {
+						private_text = 'PM to ';
+						user = posts[i]['recipient'];
+					}
 				}
 
-				string = string + '<style type="text/css">#post' + id[0] + ' a { color:' + colourArray[0] + '; } #post' + id[0] + ' a:hover { text-decoration:underline; }</style>';
+				string = string + "<li>" + DeleteMsg(posts[i]['id']) + timetext + " <strong id='post" + posts[i]['id'] + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' >" + user + "</a></strong>: " + posts[i]['message'] + "</li>";
 			}
-
 
 			$("#shoutboxcontent").html(string);
 
@@ -79,17 +55,27 @@
 
 	function SubmitMessage()
 	{
-		if($("#shoutboxinput").val() == '/help')
+		var post = {};
+		post.message = $("#shoutboxinput").val();
+
+		if(post.message == '/help')
 		{
 			v2s_help();
 			$("#shoutboxinput").val('');
 			return;
 		}
-		$.get(gdn.url('plugin/Van2ShoutData?newpost=' + escape($("#shoutboxinput").val())), function(data) {
+		if(post.message.substr(0, 3) == '/w ' || post.message.substr(0, 5) == '/msg ') {
+			post.message = post.message.substr(post.message.indexOf(" ")+1, post.message.length - post.message.indexOf(" ") - 1);
+			post.recipient = post.message.substr(0, post.message.indexOf(" "));
+			post.message = post.message.substr(post.message.indexOf(" ")+1, post.message.length - post.message.indexOf(" ") - 1);
+		}
+
+		$.post(gdn.url('plugin/Van2ShoutData'), { 'post': JSON.stringify(post) }, function(data) {
 			UpdateShoutbox();
 			$("#van2shoutsubmit").show();
 			$("#shoutboxloading").hide();
 		});
+
 		$("#van2shoutsubmit").hide();
 		$("#shoutboxloading").show();
 

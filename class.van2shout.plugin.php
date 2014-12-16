@@ -64,7 +64,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Schema['Plugin.Van2Shout.Firebase.Url'] = array('LabelCode' => 'Firebase.Url', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Url', ''));
 		$Schema['Plugin.Van2Shout.Firebase.Secret'] = array('LabelCode' => 'Firebase.Secret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Secret', ''));
 		$Schema['Plugin.Van2Shout.DisplayTarget.DiscussionsController'] = array('LabelCode' => 'AssetContent', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true));
-		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
+		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', true));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
 		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5'));
@@ -152,6 +152,17 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			if(C('Plugin.Van2Shout.Firebase.Enable', false))
 			{
 				$Sender->Head->AddString("\n<script src='https://cdn.firebase.com/v0/firebase.js'></script>");
+
+				$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+	        	$usercolor = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
+				$Sender->AddDefinition('Van2ShoutUserColor', $usercolor);
+
+				$Sender->AddDefinition('Van2ShoutFirebaseUrl', C('Plugin.Van2Shout.Firebase.Url', ''));
+
+				include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
+				$Sender->AddDefinition('Van2ShoutFirebaseToken', fb_get_token());
+			} else {
+				$Sender->AddDefinition('Van2ShoutUpdateInterval', C('Plugin.Van2Shout.Interval', 5) * 1000);
 			}
 
 			//Display the delete icon?
@@ -159,6 +170,10 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			{
 				$Sender->AddDefinition('Van2ShoutDelete', 'true');
 			}
+			$Sender->AddDefinition('UserName', $Session->User->Name);
+			$Sender->AddDefinition('Van2ShoutTimestamp', C('Plugin.Van2Shout.Timestamp', true) ? 'true' : 'false');
+			$Sender->AddDefinition('Van2ShoutTimeColor', C('Plugin.Van2Shout.TimeColour', 'grey'));
+			$Sender->AddDefinition('Van2ShoutMessageCount', C('Plugin.Van2Shout.MsgCount', '50'));
 
 			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
 			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);

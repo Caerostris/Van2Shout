@@ -28,12 +28,10 @@ class Van2ShoutData extends Gdn_Module {
 		$UserModel = new UserModel();
 		$SQL = GDN::SQL();
 
-		if(isset($_GET["postcount"]) && empty($_GET["newpost"]) && empty($_GET["del"])) {
+		if(isset($_GET["postcount"]) && empty($_POST["post"]) && empty($_GET["del"])) {
 			if(!$Session->CheckPermission('Plugins.Van2Shout.View')) {
 				return;
 			}
-
-			//Display posts - format: User{,}post1[,]User{,}post2[,]... (other characters might be used while shoutboxing
 
 			//Get data from mysql DB
 			$posts = $SQL->Select('*')->From('Shoutbox')->BeginWhereGroup()->Where('PM', '')->OrWhere('PM', $Session->User->Name)->OrWhere('UserName', $Session->User->Name)->EndWhereGroup()->OrderBy('ID')->Get()->ResultArray();
@@ -42,38 +40,41 @@ class Van2ShoutData extends Gdn_Module {
 			$posts = array_slice($posts, $_GET["postcount"]*(-1), $_GET["postcount"], true);
 
 			//Display data
-			foreach($posts as $msg)
+			$json = array();
+			foreach($posts as $post)
 			{
-				$colour = "";
-				$User = $UserModel->GetByUsername($msg["UserName"]);
+				$color = "";
+				$User = $UserModel->GetByUsername($post["UserName"]);
 
 				if($User != null)
 				{
-					$metadata = Gdn::UserMetaModel()->GetUserMeta($User->UserID, "Plugin.Van2Shout.Colour", "");
-					$colour = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour']);
-					if(!$colour) { $colour = "Default"; }
-					if($colour == "Default") { $colour = ""; }
+					$metadata = Gdn::UserMetaModel()->GetUserMeta($User->UserID, 'Plugin.Van2Shout.Colour', '');
+					$color = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
+					if($color == 'Default')
+						$color = '';
 				}
 
-				if($msg["PM"] == "")
+				$pm = array(
+					'type' => 'broadcast',
+					'id' => $post["ID"],
+					'user' => $post["UserName"],
+					'time' => $post["Timestamp"],
+					'color' => $color,
+					'message' => $post["Content"]
+				);
+
+				// process as private message
+				if($post["PM"] != "")
 				{
-					$delimeter = "[!content!]";
-					echo $colour."[!colour!]".$msg["UserName"].$delimeter.$msg["Content"]."[!msgid!]".$msg["ID"]."[!msgtime!]".$msg["Timestamp"]."\n";
+					$pm['type'] = 'private';
+					$pm['recipient'] = $post["PM"];
 				}
-				elseif($msg["PM"] != "" && $msg["UserName"] == $Session->User->Name && $msg["PM"] != $Session->User->Name)
-				{
-					$delimeter = "[!pmtocontent!]"; //User can see this PM because he sent it.
-					echo $colour."[!colour!]".$msg["PM"].$delimeter.$msg["Content"]."[!msgid!]".$msg["ID"]."[!msgtime!]".$msg["Timestamp"]."\n"; //Display in the following format: receiver[!pmtocontent!]content instead of sender[delimeter]content
-				}
-				else
-				{
-					$delimeter = "[!pmcontent!]";
-					echo $colour."[!colour!]".$msg["UserName"].$delimeter.$msg["Content"]."[!msgid!]".$msg["ID"]."[!msgtime!]".$msg["Timestamp"]."\n";
-				}
+
+				array_push($json, $pm);
 			}
-		}
 
-		if(!empty($_GET["newpost"]) && empty($_GET["postcount"]) && empty($_GET["del"])) {
+			echo json_encode($json);
+		} else if(!empty($_POST["post"]) && empty($_GET["postcount"]) && empty($_GET["del"])) {
 			//Override vanilla's default encoding UTF-8, with UTF-8 e.g. eblah² doesnt work (the ²)
 			header('Content-Type: text/html; charset=ISO-8859-1');
 
@@ -81,57 +82,36 @@ class Van2ShoutData extends Gdn_Module {
 				return;
 			}
 
-			//On some systems, the $_GET variables are mysql_real_escaped for some reason... Let's undo this!
-			$searchstring = array("\\\\", "\\n", "\\r", "\\Z", "\\'", '\\"');
-  			$replacestring = array("\\", "\n", "\r", "\x1a", "'", '"');
-			$string = str_replace($searchstring, $replacestring, $_GET["newpost"]);
+			$post = json_decode($_POST["post"], true);
 
-			//Check if message is to long
-			if(strlen($_GET["newpost"]) > 148) { return; }
-
-			if(stristr($_GET["newpost"], "[!pmcontent!]") || stristr($_GET["newpost"], "[!content!]") || stristr($_GET["newpost"], "[!msgid!]") || stristr($_GET["newpost"], "[!colour!]")) {
+			// check if message is set and within the max length
+			print_r($post);
+			if($post === null || empty($post['message']) || strlen($post['message']) > 148)
 				return;
-			}
 
-			//Filter XSS and MySQL injections
-			$string = htmlspecialchars($string, null, 'ISO-8859-1');
+			//Filter XSS // dafuq does the encoding do?
+			$post['message'] = htmlspecialchars($post['message'], null, 'ISO-8859-1');
 			//Detect links starting with http:// or ftp://
-			$string = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="blank">\0</a>', $string);
+			$post['message'] = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="blank">\0</a>', $post['message']);
 
-			//Is the shoutbox open to everyone?
+			//in case the shoutbox is open to guests - whoever would do that...
 			if($Session->User->Name == "") {
 				$username = "Guest";
 			} else {
 				$username = $Session->User->Name;
 			}
 
-			$pm = "";
-			//Is it a PM?
-			if(substr($string, 0, 3) == "/w "){
-				$cut = explode("/w ", $string);
-				$cut = explode(" ", $cut[1]);
-
-				$pm = $cut[0];
-				//Okay, we got the username, now we need to reassemble message
-				$string = "";
-				$i = 0;
-				foreach($cut as $data){
-					if($i != 0) {
-						$string .= $data." ";
-					}
-					$i++;
-				}
+			if($post['recipient'] === null) {
+				$post['recipient'] = '';
 			}
 
 			$SQL->Insert('Shoutbox', array(
 				'UserName' => $username,
-				'PM' => $pm,
-				'Content' => utf8_encode($string),
+				'PM' => $post['recipient'],
+				'Content' => utf8_encode($post['message']),
 				'Timestamp' => time()
 			));
-		}
-
-		if(!empty($_GET["del"]) && empty($_GET["newpost"]) && empty($_GET["postcount"])) {
+		} else if(!empty($_GET["del"]) && empty($_POST["post"]) && empty($_GET["postcount"])) {
 			if(!$Session->CheckPermission('Plugins.Van2Shout.Delete')) {
 				return;
 			}
@@ -144,22 +124,20 @@ class Van2ShoutData extends Gdn_Module {
 			$SQL->Delete('Shoutbox', array(
 				'ID' => $_GET["del"]
 			));
-		}
-
-		if(!empty($_GET["newtoken"]))
-		{
+		} else if(!empty($_GET["newtoken"]) && empty($_GET["reset_tokens"])) {
+			// client requesting a new firebase token
 			include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
 			echo fb_new_token();
+		} else if(!empty($_GET["reset_tokens"]) && empty($_GET["newtoken"])) {
+			// admin requesting a reset of all firebase tokens
+			if($Session->CheckPermission('Garden.Settings.Manage')) {
+				$SQL->Delete('UserMeta', array('Name' => 'Plugin.Van2Shout.FirebaseToken'));
+				echo "true";
+			}
 		}
 
 		$String = ob_get_contents();
 		@ob_end_clean();
-
-		if(!empty($_GET["reset_tokens"]))
-		{
-			$posts = $SQL->Delete('UserMeta', array('Name' => 'Plugin.Van2Shout.FirebaseToken'));
-		}
-
 		return $String;
 	}
 }
