@@ -35,7 +35,11 @@ echo $this->Form->Errors();
 
 			foreach($UserRoles as $UserRole)
 			{
-				$data[$UserRole["Name"]] = $UserRole["Name"]." (".C('Plugins.Van2Shout.'.$UserRole["Name"], 'Theme default').")";
+				$color = C('Plugins.Van2Shout.'.$UserRole["Name"], 'Default');
+				if($color == '')
+					$color = 'Default';
+
+				$data[$UserRole["Name"]] = $UserRole["Name"]." (".$color.")";
 			}
 
 			$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
