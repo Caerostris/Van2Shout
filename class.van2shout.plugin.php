@@ -15,7 +15,7 @@
 //	 You should have received a copy of the GNU General Public License
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
-// Define the plugin:
+// define the plugin:
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
@@ -30,14 +30,14 @@ $PluginInfo['Van2Shout'] = array(
 
 class Van2ShoutPlugin extends Gdn_Plugin {
 	public function PluginController_Van2ShoutData_Create($Sender) {
-		//Check if user is allowed to view
+		// check if user is allowed to view
 		$Session = GDN::Session();
 			if(!$Session->CheckPermission('Plugins.Van2Shout.View')) {
 			return;
 		}
 
 
-		//Displays the posts of the shoutbox
+		// displays the posts of the shoutbox
 
 		include_once(dirname(__FILE__).DS.'controllers'.DS.'class.van2shoutdata.php');
 		$Van2ShoutData = new Van2ShoutData($Sender);
@@ -107,7 +107,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		if(!$Session->CheckPermission('Plugins.Van2Shout.Colour'))
 			return;
 
-		//Get the data
+		// get the data
 		$UserMetaData = $this->GetUserMeta($Session->UserID, '%');
 		$ConfigArray = array('Plugin.Van2Shout.UserColour' => NULL);
 
@@ -146,30 +146,37 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Session = GDN::Session();
 		if($Session->CheckPermission('Plugins.Van2Shout.View'))
 		{
+			// add js & css requirements
+			$Sender->AddJsFile('van2shout.js', 'plugins/Van2Shout/js');
 			$Sender->AddJsFile('emojify.min.js', 'plugins/Van2Shout/js');
+			$Sender->AddJsFile('moment.min.js', 'plugins/Van2Shout/js');
+			$Sender->AddCssFile('van2shout.css', 'plugins/Van2Shout/css');
 
-			//Include firebase script?
+			// include firebase script?
 			if(C('Plugin.Van2Shout.Firebase.Enable', false))
 			{
+				// add firebase requirements
+				$Sender->AddJsFile('van2shout.firebase.js', 'plugins/Van2Shout/js');
 				$Sender->Head->AddString("\n<script src='https://cdn.firebase.com/v0/firebase.js'></script>");
 
-				$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
-	        	$usercolor = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
-				$Sender->AddDefinition('Van2ShoutUserColor', $usercolor);
-
-				$Sender->AddDefinition('Van2ShoutFirebaseUrl', C('Plugin.Van2Shout.Firebase.Url', ''));
-
 				include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
+				$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+				$usercolor = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
+
+				$Sender->AddDefinition('Van2ShoutUserColor', $usercolor);
+				$Sender->AddDefinition('Van2ShoutFirebaseUrl', C('Plugin.Van2Shout.Firebase.Url', ''));
 				$Sender->AddDefinition('Van2ShoutFirebaseToken', fb_get_token());
 			} else {
+				// add the script for a local backend
+				$Sender->AddJsFile('van2shout.local.js', 'plugins/Van2Shout/js');
 				$Sender->AddDefinition('Van2ShoutUpdateInterval', C('Plugin.Van2Shout.Interval', 5) * 1000);
 			}
 
-			//Display the delete icon?
+			// display the delete icon?
 			if($Session->CheckPermission('Plugins.Van2Shout.Delete'))
-			{
 				$Sender->AddDefinition('Van2ShoutDelete', 'true');
-			}
+
+			// add required variables
 			$Sender->AddDefinition('UserName', $Session->User->Name);
 			$Sender->AddDefinition('Van2ShoutTimestamp', C('Plugin.Van2Shout.Timestamp', true) ? 'true' : 'false');
 			$Sender->AddDefinition('Van2ShoutTimeColor', C('Plugin.Van2Shout.TimeColour', 'grey'));
