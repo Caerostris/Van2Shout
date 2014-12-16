@@ -22,23 +22,29 @@ echo $this->Form->Errors();
 
 <h1>
 	<p style="font-size:18px"><?php echo T('Van2Shout'); ?></p>
-	<p><a style="margin-left:0px;" target="_blank" href="http://kenoschwalb.com/page/contact">Contact me</a></p><br />
 </h1>
 
 <div style="margin-left:20px;">
 	<br /><b>Use firebase for a faster chat!</b><br />
-	<div id="firebase">
-		Firebase is a service which provides hyper-fast and flexible databases.<br />
-		Van2Shout is able to switch its backend from Vanilla's MySQL database to Firebase. Using Firebase will make the shoutbox incredibly fast!<br />
-		Firebase should be free for all shoutboxes. (The free version is quite limited, but we don't need much) Sign up <a href='http://firebase.com' target='_blank'>here</a>!<br />
-		<b>After you created your firebase, make sure to add the <a id="fbruleslnk2" href="javascript:show_rules();">Van2Shout security rules</a>!</b><br />
-		Database URL:&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBUrl'); ?><br />
-		Firebase secret:&nbsp;&nbsp;&nbsp;<?php echo $this->Form->Input('Plugin.Van2Shout.FBSecret'); ?><br />
-		(Leave both fields blank to switch back to MySQL)<br /><br />
-		<input type="submit" class="Button" style="margin-left:0px;" value="Save" /> <a id="fbruleslnk" href="javascript:show_rules();">Show me Van2Shout's Firebase rules</a> | <a href="javascript:reset_tokens();">Reset firebase tokens</a>
-		<div id="fbrules" style="display:none;">Go to <?php $url = C('Plugin.Van2Shout.FBUrl', ''); if($url != '') { echo "<a href='".$url."' target='blank'>your firebase</a>"; } else { echo "your firebase"; } ?> and paste the following code at the "Security" tab:<pre><?php echo file_get_contents(PATH_ROOT.DS.'plugins'.DS.'Van2Shout'.DS.'firebase'.DS.'rules.firebase'); ?></pre></div>
-	</div>
+	Firebase is a service which provides hyper-fast and flexible databases.<br />
+	The free plan should provide enough resources for all shoutboxes.<br />
+	Sign up at <b><a href='https://firebase.com' target='_blank'>firebase.com</a></b> and add the <b><a href="/<?php echo (Gdn::Request()->WebRoot().'/plugins/Van2Shout/firebase/rules.html'); ?>" class="SignInPopup">Firebase security rules</a></b><br />
+	<a href="javascript:reset_tokens();">Reset firebase tokens</a><br />
+	<br />
 </div>
+
+<table class="AltColumns">
+	<thead align="left">
+		<tr>
+			<th width="25%">Firebase</th><th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td>Enable Firebase</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Firebase.Enable', ''); ?></td></tr>
+		<tr><td>Firebase URL</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Firebase.Url'); ?></td></tr>
+		<tr><td>Firebase secret</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Firebase.Secret'); ?></td></tr>
+	</tbody>
+</table>
 
 <table class="AltColumns">
 	<thead align="left">
@@ -47,7 +53,7 @@ echo $this->Form->Errors();
 		</tr>
 	</thead>
 	<tbody>
-		<tr><td>Display on the discussions page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.ContentAsset', ''); ?></td></tr>
+		<tr><td>Display on the discussions page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.DisplayTarget.DiscussionsController', ''); ?></td></tr>
 		<tr><td>Disable timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>'Send' button text</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.SendText'); ?></td></tr>
 		<tr><td>Timestamp colour<br />(Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
@@ -55,31 +61,6 @@ echo $this->Form->Errors();
 		<tr><td>Number of messages to display<br />(Default: 50)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
 	</tbody>
 </table>
-
-<script type="text/javascript">
-	function show_rules()
-	{
-		document.getElementById('fbruleslnk').href = 'javascript:hide_rules();';
-		document.getElementById('fbruleslnk2').href = 'javascript:hide_rules();';
-		document.getElementById('fbruleslnk').innerHTML = 'Hide Van2Shout\'s Firebase rules';
-		document.getElementById('fbrules').style.display = 'inherit';
-	}
-
-	function hide_rules()
-	{
-		document.getElementById('fbruleslnk').href = 'javascript:show_rules();';
-		document.getElementById('fbruleslnk2').href = 'javascript:show_rules();';
-		document.getElementById('fbruleslnk').innerHTML = 'Show me Van2Shout\'s Firebase rules';
-		document.getElementById('fbrules').style.display = 'none';
-	}
-
-	function reset_tokens()
-	{
-		$.get(gdn.url('plugin/Van2ShoutData?reset_tokens=1'), function(data) {
-			gdn.informMessage("Tokens reset.");
-		});
-	}
-</script>
 
 <table class="AltColumns">
 	<thead align="left">
@@ -109,3 +90,12 @@ echo $this->Form->Errors();
 <?php
 echo $this->Form->Close();
 ?>
+
+<script type="text/javascript">
+	function reset_tokens()
+	{
+		$.get(gdn.url('plugin/Van2ShoutData?reset_tokens=1'), function(data) {
+			gdn.informMessage("Tokens reset.");
+		});
+	}
+</script>

@@ -14,7 +14,7 @@
 	var oldestID = 0;
 	var maxMessages = <?php echo C('Plugin.Van2Shout.MsgCount', '50') ?>;
 	var loggedInUname = "<?php echo $uname; ?>";
-	var firebase = new Firebase('<?php echo C('Plugin.Van2Shout.FBUrl', ''); ?>');
+	var firebase = new Firebase('<?php echo C('Plugin.Van2Shout.Firebase.Url', ''); ?>');
 	firebase.auth(AUTH_TOKEN, function(err)
 	{
 		if(err)

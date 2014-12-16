@@ -21,7 +21,7 @@ class Van2ShoutDiscussionsModule extends Gdn_Module {
 	}
 
 	public function AssetTarget() {
-		return VAN2SHOUT_ASSETTARGET;
+		return 'Content';
 	}
 
 	public function ToString() {

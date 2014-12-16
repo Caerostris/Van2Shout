@@ -15,24 +15,6 @@
 //	 You should have received a copy of the GNU General Public License
 //	 along with Van2Shout.  If not, see <http://www.gnu.org/licenses/>.
 
-if(C('Plugin.Van2Shout.FBUrl', '') != '' && C('Plugin.Van2Shout.FBSecret', '') != '')
-{
-	define('USE_FIREBASE', true);
-}
-else
-{
-	define('USE_FIREBASE', false);
-}
-
-if(C('Plugin.Van2Shout.ContentAsset', true))
-{
-	define('VAN2SHOUT_ASSETTARGET', 'Content');
-}
-else
-{
-	define('VAN2SHOUT_ASSETTARGET', 'Panel');
-}
-
 // Define the plugin:
 $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
@@ -78,9 +60,10 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$RoleModel = new RoleModel();
 		$Roles = $RoleModel->Get();
 
-		$Schema['Plugin.Van2Shout.FBUrl'] = array('LabelCode' => 'FBUrl', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBUrl', ''));
-		$Schema['Plugin.Van2Shout.FBSecret'] = array('LabelCode' => 'FBSecret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.FBSecret', ''));
-		$Schema['Plugin.Van2Shout.ContentAsset'] = array('LabelCode' => 'ContentAsset', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.ContentAsset', true));
+		$Schema['Plugin.Van2Shout.Firebase.Enable'] = array('LabelCode' => 'Firebase.Eanble', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Firebase.Enable', false));
+		$Schema['Plugin.Van2Shout.Firebase.Url'] = array('LabelCode' => 'Firebase.Url', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Url', ''));
+		$Schema['Plugin.Van2Shout.Firebase.Secret'] = array('LabelCode' => 'Firebase.Secret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Secret', ''));
+		$Schema['Plugin.Van2Shout.DisplayTarget.DiscussionsController'] = array('LabelCode' => 'AssetContent', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true));
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', false));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
@@ -98,18 +81,11 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render(dirname(__FILE__) . DS . 'views' . DS . 'settings.php');
 	}
 
-	public function Base_Render_Before($Sender) {
-		if(VAN2SHOUT_ASSETTARGET != 'Panel')
-			return;
-
-		$this->includev2s($Sender);
-	}
-
 	public function DiscussionsController_Render_Before($Sender) {
-		if(VAN2SHOUT_ASSETTARGET != 'Content')
+		if(!C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true))
 			return;
 
-		$this->includev2s($Sender);
+		$this->includev2s($Sender, 'Content');
 	}
 
 	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
@@ -173,7 +149,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			$Sender->AddJsFile('emojify.min.js', 'plugins/Van2Shout/js');
 
 			//Include firebase script?
-			if(USE_FIREBASE)
+			if(C('Plugin.Van2Shout.Firebase.Enable', false))
 			{
 				$Sender->Head->AddString("\n<script src='https://cdn.firebase.com/v0/firebase.js'></script>");
 			}
@@ -188,10 +164,6 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
 			$Sender->AddModule($Van2ShoutDiscussionsModule);
 		}
-	}
-
-	private function checkTableFormat()
-	{
 	}
 
 	public function Setup() {

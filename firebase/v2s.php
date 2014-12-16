@@ -24,7 +24,7 @@ function fb_new_token()
 	if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
 		return;
 
-	$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.FBSecret', ''));
+	$tokenGen = new Services_FirebaseTokenGenerator(C('Plugin.Van2Shout.Firebase.Secret', ''));
 
 	$conf = array("id" => $Session->User->Name);
 

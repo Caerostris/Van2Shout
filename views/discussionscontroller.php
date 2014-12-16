@@ -28,15 +28,7 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 	$Session = GDN::Session();
 	if($Session->CheckPermission('Plugins.Van2Shout.Post'))
 	{
-		if(VAN2SHOUT_ASSETTARGET == 'Content')
-		{
-			$width = "90%";
-		}
-		else
-		{
-			$width = "70%";
-		}
-		echo "<form action='javascript:SubmitMessage();'>\n<input type='text' style='width: ".$width."' name='shoutboxinput' id='shoutboxinput' onkeydown='checkLength();' />";
+		echo "<form action='javascript:SubmitMessage();'>\n<input type='text' style='width: 90%' name='shoutboxinput' id='shoutboxinput' onkeydown='checkLength();' />";
 		echo "<img src='".Gdn::Request()->Domain()."/".Gdn::Request()->Webroot()."/applications/dashboard/design/images/progress.gif' style='display:none;' id='shoutboxloading' />\n";
 		echo "<input type='submit' value='".T(C('Plugin.Van2Shout.SendText', 'Send'))."' id='van2shoutsubmit' name='van2shoutsubmit' class='Button' />\n</form>\n";
 	}
@@ -44,13 +36,8 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 </div>
 <script src="<?php echo Gdn::Request()->Domain()."/".Gdn::Request()->WebRoot(); ?>/plugins/Van2Shout/js/moment.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-	<?php
-		if(VAN2SHOUT_ASSETTARGET == 'Content')
-		{
-			echo "$('#van2shout').prependTo('#Content');\n";
-			echo "$('#van2shout').insertAfter('.Info');\n";
-		}
-	?>
+	$('#van2shout').prependTo('#Content');
+	$('#van2shout').insertAfter('.Info');
 
 	var timecolour = "<?php echo C('Plugin.Van2Shout.TimeColour', 'grey'); ?>";
 
@@ -99,21 +86,12 @@ echo "<h4>".T('Shoutbox')."</h4>\n";
 		}
 	});
 
-	<?php include(USE_FIREBASE ? dirname(__FILE__).DS.'discussionscontroller_firebase.php' : dirname(__FILE__).DS.'discussionscontroller_local.php'); ?>
+	<?php include(C('Plugin.Van2Shout.Firebase.Enable', false) ? dirname(__FILE__).DS.'discussionscontroller_firebase.php' : dirname(__FILE__).DS.'discussionscontroller_local.php'); ?>
 </script>
 
 <style type="text/css">
 	#van2shoutscroll {
-		<?php
-		if(VAN2SHOUT_ASSETTARGET == 'Content')
-		{
-			echo "height:200px;\n";
-		}
-		else
-		{
-			echo "height:500px\n;";
-		}
-		?>
+		height:200px;\n";
 		overflow:auto;
 	}
 
