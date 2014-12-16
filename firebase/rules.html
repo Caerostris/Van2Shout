@@ -7,7 +7,8 @@ Copy & Paste these rules and hit save:
     "broadcast": {
       ".read": "auth != null",
       "$key": {
-        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true && newData.child('colour').val() == auth.colour && auth.id == newData.child('uname').val()"
+        ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true",
+        ".validate": "newData.child('colour').val() == auth.colour && auth.id == newData.child('uname').val()"
       }
     },
     "private": {
