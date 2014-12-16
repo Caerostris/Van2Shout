@@ -35,7 +35,7 @@ function UpdateShoutbox() {
 				}
 			}
 
-			string = string + "<li>" + DeleteMsg(posts[i]['id']) + timetext + " <strong id='post" + posts[i]['id'] + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' >" + user + "</a></strong>: " + posts[i]['message'] + "</li>";
+			string = string + "<li>" + DeleteBttn(posts[i]['id']) + timetext + " <strong id='post" + posts[i]['id'] + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' >" + user + "</a></strong>: " + posts[i]['message'] + "</li>";
 		}
 
 		$("#shoutboxcontent").html(string);
@@ -43,7 +43,7 @@ function UpdateShoutbox() {
 		if(scrolldown == true)
 			obj.scrollTop = obj.scrollHeight;
 
-		emojify.run();
+		$("#shoutboxcontent").emoticonize({animate: false});
 	});
 }
 

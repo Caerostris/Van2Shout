@@ -43,7 +43,7 @@ jQuery(document).ready(function($) {
 			obj.scrollTop = obj.scrollHeight;
 		}
 
-		emojify.run();
+		$("#shout" + messageCounter).emoticonize();
 	});
 
 	firebase.child('broadcast').on('child_removed', function(snapshot) {
@@ -89,7 +89,7 @@ jQuery(document).ready(function($) {
 		if(scrolldown == true)
 			obj.scrollTop = obj.scrollHeight;
 
-		emojify.run();
+		$("#shout" + messageCounter).emoticonize();
 	});
 });
 

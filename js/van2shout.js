@@ -1,18 +1,6 @@
 jQuery(document).ready(function($) {
 	$('#van2shout').prependTo('#Content');
 	$('#van2shout').insertAfter('.Info');
-
-	emojify.setConfig({
-		emojify_tag_type: 'div',
-		only_crawl_id: 'van2shout',
-		img_dir: 'plugins/Van2Shout/img/emoji',
-		ignore_tags: {
-			'SCRIPT': 1,
-			'A': 1,
-			'PRE': 1,
-			'CODE': 1
-		}
-	});
 });
 
 function checkLength() {
