@@ -38,10 +38,11 @@ $PluginInfo['Van2Shout'] = array(
 	'Name' => 'Van2Shout',
 	'Description' => 'A simple shoutbox for vanilla2 with support for different groups and private messages',
 	'Version' => '1.053',
-	'Author' => "Caerostris",
+	'Author' => 'Caerostris',
 	'AuthorEmail' => 'caerostris@gmail.com',
 	'AuthorUrl' => 'http://caerostris.com',
-	'SettingsPermission' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
+	'SettingsUrl' => '/dashboard/settings/van2shout',
+	'SettingsPermission' => 'Garden.Settings.Manage',
 	'RegisterPermissions' => array('Plugins.Van2Shout.View', 'Plugins.Van2Shout.Post', 'Plugins.Van2Shout.Delete', 'Plugins.Van2Shout.Colour'),
 );
 
@@ -63,7 +64,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 
 	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
 		$Menu = $Sender->EventArguments['SideMenu'];
-		$Menu->AddLink('Add-ons', T('Van2Shout'), 'settings/van2shout', 'Garden.Settings.Manage');
+		$Menu->AddLink('Site Settings', T('Van2Shout'), 'settings/van2shout', 'Garden.Settings.Manage');
 	}
 
 	public function SettingsController_Van2Shout_Create($Sender) {
