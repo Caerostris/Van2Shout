@@ -48,8 +48,8 @@ class Van2ShoutData extends Gdn_Module {
 
 				if($User != null)
 				{
-					$metadata = Gdn::UserMetaModel()->GetUserMeta($User->UserID, 'Plugin.Van2Shout.Colour', '');
-					$color = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
+					$metadata = Gdn::UserMetaModel()->GetUserMeta($User->UserID, 'Plugin.Van2Shout.Colour', 'Default');
+					$color = C('Plugin.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
 					if($color == 'Default')
 						$color = '';
 				}

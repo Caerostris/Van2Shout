@@ -59,6 +59,7 @@ echo $this->Form->Errors();
 		<tr><td>Timestamp colour<br />(Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
 		<tr><td>Update interval in seconds<br />(Default: 5)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
 		<tr><td>Number of messages to display<br />(Default: 50)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
+		<tr><td>Default colour (leave empty for theme default)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Default'); ?></td></tr>
 	</tbody>
 </table>
 
@@ -72,16 +73,9 @@ echo $this->Form->Errors();
 		<?php
 			$RoleModel = new RoleModel();
 			$Roles = $RoleModel->Get();
-			$RoleNames = array();
-			array_push($RoleNames, "Default");
-
-			while($name = $Roles->Value('Name', NULL))
+			while($role = $Roles->Value('Name', NULL))
 			{
-				array_push($RoleNames, $name);
-			}
-			foreach($RoleNames as $grp)
-			{
-				echo "<tr><td>" . $grp . "</td><td>" . $this->Form->Input('Plugins.Van2Shout.'.$grp) . "</td></tr>";
+				echo "<tr><td>" . $role . "</td><td>" . $this->Form->Input('Plugin.Van2Shout.'.$role) . "</td></tr>";
 			}
 		?>
 	</tbody>
@@ -92,8 +86,7 @@ echo $this->Form->Close();
 ?>
 
 <script type="text/javascript">
-	function reset_tokens()
-	{
+	function reset_tokens() {
 		$.get(gdn.url('plugin/Van2ShoutData?reset_tokens=1'), function(data) {
 			gdn.informMessage("Tokens reset.");
 		});

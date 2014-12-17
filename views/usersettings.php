@@ -35,14 +35,14 @@ echo $this->Form->Errors();
 
 			foreach($UserRoles as $UserRole)
 			{
-				$color = C('Plugins.Van2Shout.'.$UserRole["Name"], 'Default');
+				$color = C('Plugin.Van2Shout.'.$UserRole["Name"], 'Default');
 				if($color == '')
 					$color = 'Default';
 
 				$data[$UserRole["Name"]] = $UserRole["Name"]." (".$color.")";
 			}
 
-			$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
+			$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, 'Plugin.Van2Shout.Colour', 'Default');
 			$currentColour = $metadata['Plugin.Van2Shout.Colour'];
 
 			echo "Select the group that should be used for the Shoutbox colour:<br />";

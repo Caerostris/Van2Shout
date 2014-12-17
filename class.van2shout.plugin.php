@@ -72,8 +72,9 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 
 		while($role = $Roles->Value('Name', NULL))
 		{
-			$Schema['Plugins.Van2Shout.'.$role] = array('LabelCode' => $role, 'Control' => 'Input', 'Default' => C('Plugins.Van2Shout.'.$role, ''));
+			$Schema['Plugin.Van2Shout.'.$role] = array('LabelCode' => $role, 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.'.$role, ''));
 		}
+		$Schema['Plugin.Van2Shout.Default'] = array('LabelCode' => 'Default', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Default', ''));
 
 		$ConfigurationModule->Schema($Schema);
 		$ConfigurationModule->Initialize();
@@ -161,8 +162,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 				$Sender->Head->AddString("\n<script src='https://cdn.firebase.com/v0/firebase.js'></script>");
 
 				include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
-				$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, "Plugin.Van2Shout.Colour", "");
-				$usercolor = C('Plugins.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
+				$metadata = Gdn::UserMetaModel()->GetUserMeta($Session->UserID, 'Plugin.Van2Shout.Colour', 'Default');
+				$usercolor = C('Plugin.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
 
 				$Sender->AddDefinition('Van2ShoutUserColor', $usercolor);
 				$Sender->AddDefinition('Van2ShoutFirebaseUrl', C('Plugin.Van2Shout.Firebase.Url', ''));

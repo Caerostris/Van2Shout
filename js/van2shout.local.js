@@ -19,23 +19,23 @@ function UpdateShoutbox() {
 		for(var i = 0; i < posts.length; i++) {
 			var timetext = '';
 			var private_text = '';
-			var user = posts[i]['user']
+			var user = posts[i].user;
 
 			if(gdn.definition('Van2ShoutTimestamp') == 'true') {
 				var time = moment.unix(posts[i].time).calendar();
 				timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 			}
 
-			if(posts[i]['type'] == 'private') {
-				if(posts[i]['recipient'] == gdn.definition('UserName')) {
+			if(posts[i].type == 'private') {
+				if(posts[i].recipient == gdn.definition('UserName')) {
 						private_text = 'PM from ';
 				} else {
 					private_text = 'PM to ';
-					user = posts[i]['recipient'];
+					user = posts[i].recipient;
 				}
 			}
 
-			string = string + "<li>" + DeleteBttn(posts[i]['id']) + timetext + " <strong id='post" + posts[i]['id'] + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' >" + user + "</a></strong>: " + posts[i]['message'] + "</li>";
+			string = string + "<li>" + DeleteBttn(posts[i].id) + timetext + " <strong id='post" + posts[i].id + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' style='color: " + posts[i].color + "'>" + user + "</a></strong>: " + posts[i].message + "</li>";
 		}
 
 		$("#shoutboxcontent").html(string);
