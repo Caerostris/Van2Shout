@@ -29,26 +29,52 @@ $PluginInfo['Van2Shout'] = array(
 );
 
 class Van2ShoutPlugin extends Gdn_Plugin {
+	// register a new controller which list the shoutbox messages as json when using the local backend
 	public function PluginController_Van2ShoutData_Create($Sender) {
 		// check if user is allowed to view
 		$Session = GDN::Session();
-			if(!$Session->CheckPermission('Plugins.Van2Shout.View')) {
+		if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
 			return;
-		}
 
+		// check if the local backend is active
+		if(C('Plugin.Van2Shout.Firebase.Enable', false))
+			return;
 
-		// displays the posts of the shoutbox
-
+		// display last shoutbox posts
 		include_once(dirname(__FILE__).DS.'controllers'.DS.'class.van2shoutdata.php');
 		$Van2ShoutData = new Van2ShoutData($Sender);
 		echo $Van2ShoutData->ToString();
 	}
 
-	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
-		$Menu = $Sender->EventArguments['SideMenu'];
-		$Menu->AddLink('Site Settings', T('Van2Shout'), 'settings/van2shout', 'Garden.Settings.Manage');
+	// add a link to the navigation
+	public function Base_Render_Before($Sender) {
+		// check permissions
+		$Session = GDN::Session();
+		if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
+			return;
+
+		if(C('Plugin.Van2Shout.DisplayTarget.Page', false)) {
+			$Sender->Menu->AddLink(T('Shoutbox'), T('Shoutbox'), 'vanilla/shoutbox');
+		}
 	}
 
+	// register in the the dashboard menu
+	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
+		$Menu = $Sender->EventArguments['SideMenu'];
+		$Menu->AddLink('Site Settings', T('Van2Shout'), 'dashboard/settings/van2shout', 'Garden.Settings.Manage');
+	}
+
+	// register a new controller which displays the shoutbox page
+	public function VanillaController_Shoutbox_Create($Sender) {
+		if(!C('Plugin.Van2Shout.DisplayTarget.Page', false))
+			return;
+
+		$Sender->MasterView = 'default';
+		$this->_prepare_v2s($Sender);
+		$Sender->Render($this->GetView('discussionscontroller.php'));
+	}
+
+	// show and save the settings in the dashboard
 	public function SettingsController_Van2Shout_Create($Sender) {
 		$Sender->Permission('Garden.Settings.Manage');
 		$Sender->AddSideMenu();
@@ -64,6 +90,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Schema['Plugin.Van2Shout.Firebase.Url'] = array('LabelCode' => 'Firebase.Url', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Url', ''));
 		$Schema['Plugin.Van2Shout.Firebase.Secret'] = array('LabelCode' => 'Firebase.Secret', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Firebase.Secret', ''));
 		$Schema['Plugin.Van2Shout.DisplayTarget.DiscussionsController'] = array('LabelCode' => 'AssetContent', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true));
+		$Schema['Plugin.Van2Shout.DisplayTarget.Page'] = array('LabelCode' => 'AssetContent', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.DisplayTarget.Page', false));
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', true));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
 		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'gray'));
@@ -82,13 +109,19 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render(dirname(__FILE__) . DS . 'views' . DS . 'settings.php');
 	}
 
+	// include van2shout in the discussions controller
 	public function DiscussionsController_Render_Before($Sender) {
 		if(!C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true))
 			return;
 
-		$this->includev2s($Sender, 'Content');
+		$this->_prepare_v2s($Sender);
+
+		include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
+		$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
+		$Sender->AddModule($Van2ShoutDiscussionsModule);
 	}
 
+	// add a link to the shoutbox settings in the user profile settings
 	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
 		$Session = GDN::Session();
 		$SideMenu = $Sender->EventArguments['SideMenu'];
@@ -100,8 +133,8 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		}
 	}
 
+	// display the user profile settings
 	public function ProfileController_Van2Shout_Create($Sender) {
-
 		$Session = GDN::Session();
 		$UserModel = new UserModel();
 
@@ -142,8 +175,10 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render($this->GetView('usersettings.php'));
 	}
 
-	private function includev2s($Sender)
-	{
+	/**
+	 * include the definition, css & js files required for van2shout
+	 */
+	private function _prepare_v2s($Sender) {
 		$Session = GDN::Session();
 		if($Session->CheckPermission('Plugins.Van2Shout.View'))
 		{
@@ -183,13 +218,10 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			$Sender->AddDefinition('Van2ShoutTimestamp', C('Plugin.Van2Shout.Timestamp', true) ? 'true' : 'false');
 			$Sender->AddDefinition('Van2ShoutTimeColor', C('Plugin.Van2Shout.TimeColour', 'gray'));
 			$Sender->AddDefinition('Van2ShoutMessageCount', C('Plugin.Van2Shout.MsgCount', '50'));
-
-			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
-			$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
-			$Sender->AddModule($Van2ShoutDiscussionsModule);
 		}
 	}
 
+	// called when once when the plugin gets enable
 	public function Setup() {
 		$Construct = GDN::Structure();
 		$Construct->Table('Shoutbox');

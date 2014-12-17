@@ -54,6 +54,7 @@ echo $this->Form->Errors();
 	</thead>
 	<tbody>
 		<tr><td>Display on the discussions page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.DisplayTarget.DiscussionsController', ''); ?></td></tr>
+		<tr><td>Display on a separate page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.DisplayTarget.Page', ''); ?></td></tr>
 		<tr><td>Show timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>'Send' button text</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.SendText'); ?></td></tr>
 		<tr><td>Timestamp colour<br />(Default: gray)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
