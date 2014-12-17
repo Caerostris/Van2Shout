@@ -29,9 +29,8 @@ class Van2ShoutData extends Gdn_Module {
 		$SQL = GDN::SQL();
 
 		if(isset($_GET["postcount"]) && empty($_POST["post"]) && empty($_GET["del"])) {
-			if(!$Session->CheckPermission('Plugins.Van2Shout.View')) {
+			if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
 				return;
-			}
 
 			//Get data from mysql DB
 			$posts = $SQL->Select('*')->From('Shoutbox')->BeginWhereGroup()->Where('PM', '')->OrWhere('PM', $Session->User->Name)->OrWhere('UserName', $Session->User->Name)->EndWhereGroup()->OrderBy('ID')->Get()->ResultArray();
@@ -46,8 +45,7 @@ class Van2ShoutData extends Gdn_Module {
 				$color = "";
 				$User = $UserModel->GetByUsername($post["UserName"]);
 
-				if($User != null)
-				{
+				if($User != null) {
 					$metadata = Gdn::UserMetaModel()->GetUserMeta($User->UserID, 'Plugin.Van2Shout.Colour', 'Default');
 					$color = C('Plugin.Van2Shout.'.$metadata['Plugin.Van2Shout.Colour'], '');
 					if($color == 'Default')
@@ -64,8 +62,7 @@ class Van2ShoutData extends Gdn_Module {
 				);
 
 				// process as private message
-				if($post["PM"] != "")
-				{
+				if($post["PM"] != "") {
 					$pm['type'] = 'private';
 					$pm['recipient'] = $post["PM"];
 				}
@@ -78,9 +75,8 @@ class Van2ShoutData extends Gdn_Module {
 			//Override vanilla's default encoding UTF-8, with UTF-8 e.g. eblah² doesnt work (the ²)
 			header('Content-Type: text/html; charset=ISO-8859-1');
 
-			if(!$Session->CheckPermission('Plugins.Van2Shout.Post')) {
+			if(!$Session->CheckPermission('Plugins.Van2Shout.Post'))
 				return;
-			}
 
 			$post = json_decode($_POST["post"], true);
 
@@ -101,9 +97,8 @@ class Van2ShoutData extends Gdn_Module {
 				$username = $Session->User->Name;
 			}
 
-			if($post['recipient'] === null) {
+			if($post['recipient'] === null)
 				$post['recipient'] = '';
-			}
 
 			$SQL->Insert('Shoutbox', array(
 				'UserName' => $username,
@@ -112,13 +107,11 @@ class Van2ShoutData extends Gdn_Module {
 				'Timestamp' => time()
 			));
 		} else if(!empty($_GET["del"]) && empty($_POST["post"]) && empty($_GET["postcount"])) {
-			if(!$Session->CheckPermission('Plugins.Van2Shout.Delete')) {
+			if(!$Session->CheckPermission('Plugins.Van2Shout.Delete'))
 				return;
-			}
 
-			if(!is_numeric($_GET["del"])) {
+			if(!is_numeric($_GET["del"]))
 				return;
-			}
 
 			//Delete post from mysql DB
 			$SQL->Delete('Shoutbox', array(
@@ -130,10 +123,11 @@ class Van2ShoutData extends Gdn_Module {
 			echo fb_new_token();
 		} else if(!empty($_GET["reset_tokens"]) && empty($_GET["newtoken"])) {
 			// admin requesting a reset of all firebase tokens
-			if($Session->CheckPermission('Garden.Settings.Manage')) {
-				$SQL->Delete('UserMeta', array('Name' => 'Plugin.Van2Shout.FirebaseToken'));
-				echo "true";
-			}
+			if(!$Session->CheckPermission('Garden.Settings.Manage'))
+				return;
+
+			include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
+			fb_reset_tokens();
 		}
 
 		$String = ob_get_contents();

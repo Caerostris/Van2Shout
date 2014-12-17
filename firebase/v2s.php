@@ -1,8 +1,7 @@
 <?php
 include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'FirebaseToken.php');
 
-function fb_get_token()
-{
+function fb_get_token() {
 	$Session = GDN::Session();
 	$uname = $Session->User->Name;
 
@@ -10,15 +9,12 @@ function fb_get_token()
 	$auth_token = $metadata['Plugin.Van2Shout.FirebaseToken'];
 
 	if($auth_token == "")
-	{
 		$auth_token = fb_new_token();
-	}
 
 	return $auth_token;
 }
 
-function fb_new_token()
-{
+function fb_new_token() {
 	$Session = GDN::Session();
 
 	if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
@@ -41,5 +37,10 @@ function fb_new_token()
 	Gdn::UserMetaModel()->SetUserMeta($Session->UserID, "Plugin.Van2Shout.FirebaseToken", $auth_token);
 
 	return $auth_token;
+}
+
+function fb_reset_tokens() {
+	if(GDN::Session()->CheckPermission('Garden.Settings.Manage'))
+		GDN::SQL()->Delete('UserMeta', array('Name' => 'Plugin.Van2Shout.FirebaseToken'));
 }
 ?>

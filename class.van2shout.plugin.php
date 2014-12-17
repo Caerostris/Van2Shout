@@ -66,7 +66,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Schema['Plugin.Van2Shout.DisplayTarget.DiscussionsController'] = array('LabelCode' => 'AssetContent', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true));
 		$Schema['Plugin.Van2Shout.Timestamp'] = array('LabelCode' => 'Timestamp', 'Control' => 'Checkbox', 'Default' => C('Plugin.Van2Shout.Timestamp', true));
 		$Schema['Plugin.Van2Shout.SendText'] = array('LabelCode' => 'SendText', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.SendText', 'Send'));
-		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'grey'));
+		$Schema['Plugin.Van2Shout.TimeColour'] = array('LabelCode' => 'TimeColour', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.TimeColour', 'gray'));
 		$Schema['Plugin.Van2Shout.Interval'] = array('LabelCode' => 'Interval', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.Interval', '5'));
 		$Schema['Plugin.Van2Shout.MsgCount'] = array('LabelCode' => 'MsgCount', 'Control' => 'Input', 'Default' => C('Plugin.Van2Shout.MsgCount', '50'));
 
@@ -181,7 +181,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 			// add required variables
 			$Sender->AddDefinition('UserName', $Session->User->Name);
 			$Sender->AddDefinition('Van2ShoutTimestamp', C('Plugin.Van2Shout.Timestamp', true) ? 'true' : 'false');
-			$Sender->AddDefinition('Van2ShoutTimeColor', C('Plugin.Van2Shout.TimeColour', 'grey'));
+			$Sender->AddDefinition('Van2ShoutTimeColor', C('Plugin.Van2Shout.TimeColour', 'gray'));
 			$Sender->AddDefinition('Van2ShoutMessageCount', C('Plugin.Van2Shout.MsgCount', '50'));
 
 			include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');

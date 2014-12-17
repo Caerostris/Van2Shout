@@ -56,7 +56,7 @@ echo $this->Form->Errors();
 		<tr><td>Display on the discussions page</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.DisplayTarget.DiscussionsController', ''); ?></td></tr>
 		<tr><td>Show timestamp</td><td><?php echo $this->Form->CheckBox('Plugin.Van2Shout.Timestamp', ''); ?></td></tr>
 		<tr><td>'Send' button text</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.SendText'); ?></td></tr>
-		<tr><td>Timestamp colour<br />(Default: grey)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
+		<tr><td>Timestamp colour<br />(Default: gray)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.TimeColour'); ?></td></tr>
 		<tr><td>Update interval in seconds<br />(Default: 5)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Interval'); ?></td></tr>
 		<tr><td>Number of messages to display<br />(Default: 50)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.MsgCount'); ?></td></tr>
 		<tr><td>Default colour (leave empty for theme default)</td><td><?php echo $this->Form->Input('Plugin.Van2Shout.Default'); ?></td></tr>
@@ -86,9 +86,46 @@ echo $this->Form->Close();
 ?>
 
 <script type="text/javascript">
+	var firebase_cb = $("#Form_Plugin-dot-Van2Shout-dot-Firebase-dot-Enable");
+
 	function reset_tokens() {
 		$.get(gdn.url('plugin/Van2ShoutData?reset_tokens=1'), function(data) {
 			gdn.informMessage("Tokens reset.");
 		});
 	}
+
+	$('input[type=submit].Button').click(function(e) {
+		if(firebase_cb.attr('checked') == 'checked')
+			reset_tokens();
+		enable_firebase_inputs();
+	});
+
+	firebase_cb.on('change', function(e) {
+		check_firebase_inputs();
+	});
+
+	function check_firebase_inputs() {
+		if(firebase_cb.attr('checked') == 'checked') {
+			enable_firebase_inputs();
+		} else {
+			disable_firebase_inputs();
+		}
+	}
+	check_firebase_inputs();
+
+	function enable_firebase_inputs() {
+		$("#Form_Plugin-dot-Van2Shout-dot-Firebase-dot-Url").prop('disabled', false);
+		$("#Form_Plugin-dot-Van2Shout-dot-Firebase-dot-Secret").prop('disabled', false);
+	}
+
+	function disable_firebase_inputs() {
+		$("#Form_Plugin-dot-Van2Shout-dot-Firebase-dot-Url").prop('disabled', true);
+		$("#Form_Plugin-dot-Van2Shout-dot-Firebase-dot-Secret").prop('disabled', true);
+	}
 </script>
+
+<style type='text/css'>
+	.InputBox:disabled {
+		color: #C0C0C0;
+	}
+</style>

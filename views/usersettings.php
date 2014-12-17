@@ -49,6 +49,5 @@ echo $this->Form->Errors();
 			echo $this->Form->DropDown('Plugin.Van2Shout.UserColour', $data, array('Value' => $currentColour));
 		?>
 	</li>
-
 </ul>
 <?php echo $this->Form->Close('Save');
