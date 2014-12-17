@@ -29,7 +29,59 @@ $PluginInfo['Van2Shout'] = array(
 );
 
 class Van2ShoutPlugin extends Gdn_Plugin {
-	// register a new controller which list the shoutbox messages as json when using the local backend
+	// add a link for the shoutbox page to the navigation
+	public function Base_Render_Before($Sender) {
+		// check permissions
+		$Session = GDN::Session();
+		if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
+			return;
+
+		if(C('Plugin.Van2Shout.DisplayTarget.Page', false)) {
+			$Sender->Menu->AddLink(T('Shoutbox'), T('Shoutbox'), 'vanilla/shoutbox');
+		}
+	}
+
+	// include van2shout in the discussions controller
+	public function DiscussionsController_Render_Before($Sender) {
+		if(!C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true))
+			return;
+
+		$this->_prepare_v2s($Sender);
+
+		include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
+		$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
+		$Sender->AddModule($Van2ShoutDiscussionsModule);
+	}
+
+	// add a link to the shoutbox settings in the user profile settings
+	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
+		$Session = GDN::Session();
+		$SideMenu = $Sender->EventArguments['SideMenu'];
+		$ViewingUserID = $Session->UserID;
+
+		if($Sender->User->UserID == $ViewingUserID && $Session->CheckPermission('Plugins.Van2Shout.Colour'))
+		{
+			$SideMenu->AddLink('Options', T('Van2Shout Settings'), '/profile/van2shout', FALSE, array('class' => 'Popup'));
+		}
+	}
+
+	// register in the the admin dashboard menu
+	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
+		$Menu = $Sender->EventArguments['SideMenu'];
+		$Menu->AddLink('Site Settings', T('Van2Shout'), 'dashboard/settings/van2shout', 'Garden.Settings.Manage');
+	}
+
+	// register a new controller which displays the shoutbox page
+	public function VanillaController_Shoutbox_Create($Sender) {
+		if(!C('Plugin.Van2Shout.DisplayTarget.Page', false))
+			return;
+
+		$Sender->MasterView = 'default';
+		$this->_prepare_v2s($Sender);
+		$Sender->Render($this->GetView('discussionscontroller.php'));
+	}
+
+	// register a new controller which lists the shoutbox messages as json when using the local backend
 	public function PluginController_Van2ShoutData_Create($Sender) {
 		// check if user is allowed to view
 		$Session = GDN::Session();
@@ -44,34 +96,6 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		include_once(dirname(__FILE__).DS.'controllers'.DS.'class.van2shoutdata.php');
 		$Van2ShoutData = new Van2ShoutData($Sender);
 		echo $Van2ShoutData->ToString();
-	}
-
-	// add a link to the navigation
-	public function Base_Render_Before($Sender) {
-		// check permissions
-		$Session = GDN::Session();
-		if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
-			return;
-
-		if(C('Plugin.Van2Shout.DisplayTarget.Page', false)) {
-			$Sender->Menu->AddLink(T('Shoutbox'), T('Shoutbox'), 'vanilla/shoutbox');
-		}
-	}
-
-	// register in the the dashboard menu
-	public function Base_GetAppSettingsMenuItems_Handler($Sender) {
-		$Menu = $Sender->EventArguments['SideMenu'];
-		$Menu->AddLink('Site Settings', T('Van2Shout'), 'dashboard/settings/van2shout', 'Garden.Settings.Manage');
-	}
-
-	// register a new controller which displays the shoutbox page
-	public function VanillaController_Shoutbox_Create($Sender) {
-		if(!C('Plugin.Van2Shout.DisplayTarget.Page', false))
-			return;
-
-		$Sender->MasterView = 'default';
-		$this->_prepare_v2s($Sender);
-		$Sender->Render($this->GetView('discussionscontroller.php'));
 	}
 
 	// show and save the settings in the dashboard
@@ -107,30 +131,6 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$ConfigurationModule->Initialize();
 		$Sender->ConfigurationModule = $ConfigurationModule;
 		$Sender->Render(dirname(__FILE__) . DS . 'views' . DS . 'settings.php');
-	}
-
-	// include van2shout in the discussions controller
-	public function DiscussionsController_Render_Before($Sender) {
-		if(!C('Plugin.Van2Shout.DisplayTarget.DiscussionsController', true))
-			return;
-
-		$this->_prepare_v2s($Sender);
-
-		include_once(PATH_PLUGINS.DS.'Van2Shout'.DS.'modules'.DS.'class.van2shoutdiscussionsmodule.php');
-		$Van2ShoutDiscussionsModule = new Van2ShoutDiscussionsModule($Sender);
-		$Sender->AddModule($Van2ShoutDiscussionsModule);
-	}
-
-	// add a link to the shoutbox settings in the user profile settings
-	public function ProfileController_AfterAddSideMenu_Handler($Sender) {
-		$Session = GDN::Session();
-		$SideMenu = $Sender->EventArguments['SideMenu'];
-		$ViewingUserID = $Session->UserID;
-
-		if($Sender->User->UserID == $ViewingUserID && $Session->CheckPermission('Plugins.Van2Shout.Colour'))
-		{
-			$SideMenu->AddLink('Options', T('Van2Shout Settings'), '/profile/van2shout', FALSE, array('class' => 'Popup'));
-		}
 	}
 
 	// display the user profile settings
