@@ -85,8 +85,10 @@ class Van2ShoutData extends Gdn_Module {
 			if($post === null || empty($post['message']) || strlen($post['message']) > 148)
 				return;
 
-			//Filter XSS // dafuq does the encoding do?
+			// This XSS filter is insufficient
+			// The data needs to be sanitized here
 			$post['message'] = htmlspecialchars($post['message'], null, 'ISO-8859-1');
+			
 			//Detect links starting with http:// or ftp://
 			$post['message'] = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="blank">\0</a>', $post['message']);
 
