@@ -37,7 +37,7 @@ jQuery(document).ready(function($) {
 		if(gdn.definition('Van2ShoutTimestamp') == 'true')
 			timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 
-		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='brod_" + sn_name + "'>" + DeleteBttn('brod_' + sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + msg.content + "</li>");
+		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='brod_" + sn_name + "'>" + DeleteBttn('brod_' + sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + htmlEntities(msg.content) + "</li>");
 		$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
 		if(scrolldown == true) {
 			obj.scrollTop = obj.scrollHeight;
@@ -84,7 +84,7 @@ jQuery(document).ready(function($) {
 		if(gdn.definition('Van2ShoutTimestamp') == 'true')
 			timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 
-		$("#shoutboxcontent").append("<li name='priv_" + snapshot.name() + "'>" + DeleteBttn('priv_' + snapshot.name()) + timetext + pmtext + msg.content + "</li>");
+		$("#shoutboxcontent").append("<li name='priv_" + snapshot.name() + "'>" + DeleteBttn('priv_' + snapshot.name()) + timetext + pmtext + htmlEntities(msg.content) + "</li>");
 
 		if(scrolldown == true)
 			obj.scrollTop = obj.scrollHeight;
@@ -152,5 +152,12 @@ function DeletePost(id) {
 	} else if(id.substr(0, 5) == 'priv_') {
 		firebase_delete(firebase.child('private').child(gdn.definition('UserName').toLowerCase()), name);
 	}
+}
+
+function htmlEntities(str) {
+	return String(str).replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;');
 }
 
