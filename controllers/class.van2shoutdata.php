@@ -22,7 +22,6 @@ class Van2ShoutData extends Gdn_Module {
 	}
 
 	public function ToString() {
-
 		ob_start();
 		$Session = GDN::Session();
 		$UserModel = new UserModel();
@@ -70,23 +69,19 @@ class Van2ShoutData extends Gdn_Module {
 				array_push($json, $pm);
 			}
 
-			echo json_encode($json);
+			echo json_encode($json, JSON_UNESCAPED_UNICODE);
 		} else if(!empty($_POST["post"]) && empty($_GET["postcount"]) && empty($_GET["del"])) {
-			//Override vanilla's default encoding UTF-8, with UTF-8 e.g. eblah² doesnt work (the ²)
-			header('Content-Type: text/html; charset=ISO-8859-1');
-
 			if(!$Session->CheckPermission('Plugins.Van2Shout.Post'))
 				return;
 
 			$post = json_decode($_POST["post"], true);
 
 			// check if message is set and within the max length
-			print_r($post);
 			if($post === null || empty($post['message']) || strlen($post['message']) > 148)
 				return;
 
 			// Filter XSS
-			$post['message'] = htmlspecialchars($post['message'], null, 'ISO-8859-1');
+			$post['message'] = htmlspecialchars($post['message'], null, 'utf-8');
 
 			//Detect links starting with http:// or ftp://
 			$post['message'] = preg_replace( '/(http|ftp)+(s)?:(\/\/)((\w|\.)+)(\/)?(\S+)?/i', '<a href="\0" target="blank">\0</a>', $post['message']);
@@ -104,7 +99,7 @@ class Van2ShoutData extends Gdn_Module {
 			$SQL->Insert('Shoutbox', array(
 				'UserName' => $username,
 				'PM' => $post['recipient'],
-				'Content' => utf8_encode($post['message']),
+				'Content' => $post['message'],
 				'Timestamp' => time()
 			));
 		} else if(!empty($_GET["del"]) && empty($_POST["post"]) && empty($_GET["postcount"])) {
