@@ -81,6 +81,23 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		$Sender->Render($this->GetView('discussionscontroller.php'));
 	}
 
+	// handle firebase token requests
+	public function PluginController_Van2ShoutFirebase_Create($Sender) {
+		// check if user is allowed to view
+		$Session = GDN::Session();
+		if(!$Session->CheckPermission('Plugins.Van2Shout.View'))
+			return;
+
+		// check if the firebase backend is active
+		if(!C('Plugin.Van2Shout.Firebase.Enable', false))
+			return;
+
+		// display last shoutbox posts
+		include_once(dirname(__FILE__).DS.'controllers'.DS.'class.van2shoutfirebase.php');
+		$Van2ShoutFirebase = new Van2ShoutFirebase($Sender);
+		echo $Van2ShoutFirebase->ToString();
+	}
+
 	// register a new controller which lists the shoutbox messages as json when using the local backend
 	public function PluginController_Van2ShoutData_Create($Sender) {
 		// check if user is allowed to view

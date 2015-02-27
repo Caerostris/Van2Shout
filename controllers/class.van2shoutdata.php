@@ -113,17 +113,6 @@ class Van2ShoutData extends Gdn_Module {
 			$SQL->Delete('Shoutbox', array(
 				'ID' => $_GET["del"]
 			));
-		} else if(!empty($_GET["newtoken"]) && empty($_GET["reset_tokens"])) {
-			// client requesting a new firebase token
-			include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
-			echo fb_new_token();
-		} else if(!empty($_GET["reset_tokens"]) && empty($_GET["newtoken"])) {
-			// admin requesting a reset of all firebase tokens
-			if(!$Session->CheckPermission('Garden.Settings.Manage'))
-				return;
-
-			include_once(PATH_ROOT.DS.plugins.DS.'Van2Shout'.DS.'firebase'.DS.'v2s.php');
-			fb_reset_tokens();
 		}
 
 		$String = ob_get_contents();

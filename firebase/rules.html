@@ -10,14 +10,6 @@ Copy & Paste these rules and hit save:
         ".write": "auth != null && (!data.exists() || auth.delete == true) && auth.post == true",
         ".validate": "newData.child('colour').val() == auth.colour && auth.id == newData.child('uname').val()"
       }
-    },
-    "private": {
-      "$user": {
-        "$key": {
-          ".write": "((auth != null && !data.exists() && auth.post == true && auth.id == newData.child('uname').val()) || (auth.id == $user))"
-        },
-        ".read": "auth.id == $user"
-      }
     }
   }
 }
