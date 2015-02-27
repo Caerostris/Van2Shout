@@ -201,7 +201,7 @@ class Van2ShoutPlugin extends Gdn_Plugin {
 		{
 			// add js & css requirements
 			$Sender->AddJsFile('van2shout.js', 'plugins/Van2Shout/js');
-			$Sender->AddJsFile('jquery.cssemoticons.min.js', 'plugins/Van2Shout/js');
+			$Sender->AddJsFile('cssemoticons.min.js', 'plugins/Van2Shout/js');
 			$Sender->AddJsFile('moment.min.js', 'plugins/Van2Shout/js');
 			$Sender->AddCssFile('van2shout.css', 'plugins/Van2Shout/css');
 			$Sender->AddCssFile('jquery.cssemoticons.css', 'plugins/Van2Shout/css');

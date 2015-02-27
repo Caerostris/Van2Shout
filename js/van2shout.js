@@ -1,6 +1,9 @@
+var emoticon;
+
 jQuery(document).ready(function($) {
 	$('#van2shout').prependTo('#Content');
 	$('#van2shout').insertAfter('.Info');
+	emoticon = new CSSEmoticon();
 });
 
 function checkLength() {

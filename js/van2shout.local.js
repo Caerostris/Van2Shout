@@ -35,15 +35,14 @@ function UpdateShoutbox() {
 				}
 			}
 
-			string = string + "<li>" + DeleteBttn(posts[i].id) + timetext + " <strong id='post" + posts[i].id + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' style='color: " + posts[i].color + "'>" + user + "</a></strong>: " + posts[i].message + "</li>";
+			string = string + "<li>" + DeleteBttn(posts[i].id) + timetext + " <strong id='post" + posts[i].id + "'>" + private_text + "<a href='" + gdn.url('profile/' + user) + "' target='blank' style='color: " + posts[i].color + "'>" + user + "</a></strong>: " + emoticon.emoticonize(posts[i].message, {animate: false}) + "</li>";
 		}
 
 		$("#shoutboxcontent").html(string);
 
-		if(scrolldown == true)
+		if(scrolldown == true) {
 			obj.scrollTop = obj.scrollHeight;
-
-		$("#shoutboxcontent").emoticonize({animate: false});
+		}
 	});
 }
 

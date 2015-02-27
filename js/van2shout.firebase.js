@@ -38,13 +38,12 @@ jQuery(document).ready(function($) {
 		if(gdn.definition('Van2ShoutTimestamp') == 'true')
 			timetext = "<font color='" + gdn.definition('Van2ShoutTimeColor') + "'>[" + time + "]</font>";
 
-		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='brod_" + sn_name + "'>" + DeleteBttn('brod_' + sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + htmlEntities(msg.content) + "</li>");
+		$("#shoutboxcontent").append("<li id='shout" + messageCounter + "' name='brod_" + sn_name + "'>" + DeleteBttn('brod_' + sn_name) + timetext + " <strong><a href='" + gdn.url('profile/' + msg.uname) + "' target='blank'>" + msg.uname + "</a></strong>: " + emoticon.emoticonize(htmlEntities(msg.content)) + "</li>");
 		$("#shoutboxcontent").append("<style type='text/css'>#shout" + messageCounter + " a { color: " + msg.colour + "; } #shout" + messageCounter + " a:hover { text-decoration: underline; }</style>");
+
 		if(scrolldown == true) {
 			obj.scrollTop = obj.scrollHeight;
 		}
-
-		$("#shout" + messageCounter).emoticonize();
 	});
 
 	// remove messages locally which have been removed from the database
