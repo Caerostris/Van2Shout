@@ -9,7 +9,7 @@ CSS emoticon integration helps you express your feelings
 
 ## Group based colours
 Want your Administrators to shine in bright red?
-No problem, just set the the colour on the settings page.
+No problem, just set the colour on the settings page.
 
 ## Support for firebase
 With firebase, the shoutbox works incredibly smooth and fast!
